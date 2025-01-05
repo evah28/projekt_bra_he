@@ -4,11 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0258ad0a-b25d-45a7-b6fd-9ccfd1f81b56" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/GUILogin.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/GUILoginLogin.form" afterDir="false" />
+    <list default="true" id="0258ad0a-b25d-45a7-b6fd-9ccfd1f81b56" name="Changes" comment="GUI Login">
+      <change afterPath="$PROJECT_DIR$/src/GUIMenu.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/GUIMenu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUILogin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUILogin.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -34,6 +34,18 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "captainIQ123"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/captainIQ123/projekt_bra_he.git",
+    "accountId": "6c3e5b2d-2534-4e2b-839f-3ba74664ea99"
+  }
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -50,6 +62,8 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "eva__branch",
     "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "onboarding.tips.debug.path": "C:/Users/evahe/OneDrive/Desktop/FH/3. Semester/projekt_bra_he/src/Main.java",
@@ -73,10 +87,24 @@
       <option name="presentableId" value="Default" />
       <updated>1735480554751</updated>
       <workItem from="1735480555867" duration="2000" />
+      <workItem from="1736069129213" duration="3609000" />
     </task>
+    <task id="LOCAL-00001" summary="GUI Login">
+      <option name="closed" value="true" />
+      <created>1735485720922</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1735485720922</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="GUI Login" />
+    <option name="LAST_COMMIT_MESSAGE" value="GUI Login" />
   </component>
 </project>

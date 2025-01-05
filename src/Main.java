@@ -21,7 +21,7 @@ public class Main {
             connection = DriverManager.getConnection(URL, USER1, PASSWORD1);
             System.out.println("Verbindung mit Benutzer 1 erfolgreich!");
         } catch (SQLException e1) {
-            System.out.println("Verbindung mit Benutzer 1 fehlgeschlagen, versuche Benutzer2...");
+            System.out.println("Verbindung mit Benutzer 1 fehlgeschlagen, versuche Benutzer 2...");
 
             try {
                 // Wenn Benutzer1 fehlschlägt, versuche es mit Benutzer2

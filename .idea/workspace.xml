@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0258ad0a-b25d-45a7-b6fd-9ccfd1f81b56" name="Changes" comment="GUI Login">
+    <list default="true" id="0258ad0a-b25d-45a7-b6fd-9ccfd1f81b56" name="Changes" comment="DB Anbindung">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projekt_bra_he.iml" beforeDir="false" afterPath="$PROJECT_DIR$/projekt_bra_he.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -99,7 +98,15 @@
       <option name="project" value="LOCAL" />
       <updated>1735485720922</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="DB Anbindung">
+      <option name="closed" value="true" />
+      <created>1736077401834</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1736077401834</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -107,6 +114,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="GUI Login" />
-    <option name="LAST_COMMIT_MESSAGE" value="GUI Login" />
+    <MESSAGE value="DB Anbindung" />
+    <option name="LAST_COMMIT_MESSAGE" value="DB Anbindung" />
   </component>
 </project>

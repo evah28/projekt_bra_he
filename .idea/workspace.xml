@@ -4,8 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0258ad0a-b25d-45a7-b6fd-9ccfd1f81b56" name="Changes" comment="DB Anbindung">
+    <list default="true" id="0258ad0a-b25d-45a7-b6fd-9ccfd1f81b56" name="Changes" comment="DB Anbindung Eva">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projekt_bra_he.iml" beforeDir="false" afterPath="$PROJECT_DIR$/projekt_bra_he.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUIMenu.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUIMenu.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUIMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUIMenu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -26,7 +29,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="magda_branch" />
+        <entry key="$PROJECT_DIR$" value="eva_branch" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -57,17 +60,18 @@
     "Application.Main.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "UI_DESIGNER_EDITOR_MODE.PaletteManager.WIDTH": "234",
     "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/magda/Downloads/mysql-connector-j-9.1.0/mysql-connector-j-9.1.0/mysql-connector-j-9.1.0.jar",
+    "last_opened_file_path": "C:/Users/evahe/OneDrive/Dokumente/mysql-connector-j-9.1.0/mysql-connector-j-9.1.0.jar",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "onboarding.tips.debug.path": "C:/Users/evahe/OneDrive/Desktop/FH/3. Semester/projekt_bra_he/src/Main.java",
     "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -89,6 +93,9 @@
       <updated>1735480554751</updated>
       <workItem from="1735480555867" duration="2000" />
       <workItem from="1736069129213" duration="3609000" />
+      <workItem from="1736336493142" duration="532000" />
+      <workItem from="1736337094119" duration="129000" />
+      <workItem from="1736338022881" duration="7640000" />
     </task>
     <task id="LOCAL-00001" summary="GUI Login">
       <option name="closed" value="true" />
@@ -106,7 +113,15 @@
       <option name="project" value="LOCAL" />
       <updated>1736077401834</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="DB Anbindung Eva">
+      <option name="closed" value="true" />
+      <created>1736082208962</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1736082208962</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -115,6 +130,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="GUI Login" />
     <MESSAGE value="DB Anbindung" />
-    <option name="LAST_COMMIT_MESSAGE" value="DB Anbindung" />
+    <MESSAGE value="DB Anbindung Eva" />
+    <option name="LAST_COMMIT_MESSAGE" value="DB Anbindung Eva" />
   </component>
 </project>

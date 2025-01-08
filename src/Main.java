@@ -21,7 +21,7 @@ public class Main {
             connection = DriverManager.getConnection(URL, USER1, PASSWORD1);
             System.out.println("Verbindung mit Benutzer 1 erfolgreich!");
         } catch (SQLException e1) {
-            System.out.println("Verbindung mit Benutzer 1 fehlgeschlagen, versuche Benutzer2...");
+            System.out.println("Verbindung mit Benutzer 1 fehlgeschlagen, versuche Benutzer 2...");
 
             try {
                 // Wenn Benutzer1 fehlschlägt, versuche es mit Benutzer2
@@ -32,16 +32,10 @@ public class Main {
                 e2.printStackTrace();
             }
         }
-/*
-        Connection con = null;
-        try{
-            con = DriverManager.getConnection(URL, USER, PASSWORD);
-            System.out.println("Datenbank verbunden.");
-        }catch (SQLException e){
-            throw new RuntimeException(e);
-        }
 
-        /*if (con != null) {
+
+        Connection con = null;
+        if (con != null) {
             try {
                 Statement stmt = con.createStatement();
                 ResultSet rs = stmt.executeQuery("SELECT * FROM patients");
@@ -54,7 +48,7 @@ public class Main {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }*/
+        }
 
         //GUI
         SwingUtilities.invokeLater(() -> {
@@ -64,6 +58,8 @@ public class Main {
 
         GUILogin login = new GUILogin();
         login.setVisible(true);
+
+        SwingUtilities.invokeLater(() -> new GUIMenu());
 
     }
 }

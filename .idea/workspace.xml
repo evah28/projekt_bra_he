@@ -5,12 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0258ad0a-b25d-45a7-b6fd-9ccfd1f81b56" name="Changes" comment="Patienten-DB bei Menü anzeigen">
-      <change afterPath="$PROJECT_DIR$/src/GUIPatientenSuche.form" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/GUIPatientenSuche.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUILogin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUILogin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUILoginLogin.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUILoginLogin.form" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GUIMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUIMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUIPatientenSuche.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUIPatientenSuche.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUIPatientenSuche.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUIPatientenSuche.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -42,12 +40,12 @@
     &quot;assignee&quot;: &quot;captainIQ123&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/captainIQ123/projekt_bra_he.git&quot;,
-    &quot;accountId&quot;: &quot;6c3e5b2d-2534-4e2b-839f-3ba74664ea99&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/captainIQ123/projekt_bra_he.git",
+    "accountId": "09bcdb9d-35ed-4c9d-ab55-564284b0017b"
   }
-}</component>
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>

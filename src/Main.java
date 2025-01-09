@@ -32,22 +32,14 @@ public class Main {
                 e2.printStackTrace();
             }
         }
-
-        Connection con = null;
-        if (con != null) {
+        /*DB Verbindung schließen
+        if (connection != null) {
             try {
-                Statement stmt = con.createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT * FROM patients");
-
-                while (rs.next()) {
-                    System.out.println("ID: " + rs.getInt("idpatients"));
-                    System.out.println("Name: " + rs.getString("vorname"));
-                }
-                con.close();
-            } catch (Exception e) {
+                connection.close();
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
 
         //GUI
         SwingUtilities.invokeLater(() -> {

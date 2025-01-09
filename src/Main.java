@@ -33,7 +33,6 @@ public class Main {
             }
         }
 
-
         Connection con = null;
         if (con != null) {
             try {
@@ -56,10 +55,11 @@ public class Main {
             gridExample.setVisible(true);
         });
 
-        GUILogin login = new GUILogin();
-        login.setVisible(true);
 
         SwingUtilities.invokeLater(() -> new GUIMenu());
+
+
+
 
     }
 }

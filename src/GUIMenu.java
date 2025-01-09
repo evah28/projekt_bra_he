@@ -53,6 +53,8 @@ public class GUIMenu extends JFrame {
         itemExportieren.addActionListener(e -> {
         });
         itemSuchen.addActionListener(e -> {
+            GUIPatientenSuche suche = new GUIPatientenSuche();
+            suche.patientenSuchen();
         });
 
 
@@ -65,6 +67,8 @@ public class GUIMenu extends JFrame {
         add(panelTabelle);
 
         zeigePatientenDaten();
+
+
 
     }
 
@@ -134,5 +138,8 @@ public class GUIMenu extends JFrame {
         }
 
     }
+
+
+
 
 }

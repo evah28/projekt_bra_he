@@ -57,42 +57,22 @@ public class GUIMenu extends JFrame {
 
         zeigePatientenDaten();
 
-
     }
 
     public void zeigePatientenDaten(){
 
-        String URL = "jdbc:mysql://localhost:3306/project_db";
-        String USER1 = "root";
-        String PASSWORD1 = "FHmagdalena0504?";
+        //Aufrufen der Methode dbVerbindung aus der Patientenklasse
+        Connection connection = Patient.dbVerbindung();
 
-        String USER2 = "root";
-        String PASSWORD2 = "Tm20!Ka89#MaJO";
-
-        //Verbindung Datenbank
-        Connection con = null;
-
-       try {
-            // Zuerst versuchen, mit dem ersten Benutzer eine Verbindung aufzubauen
-            con = DriverManager.getConnection(URL, USER1, PASSWORD1);
-        } catch (SQLException e1) {
-            try {
-                // Wenn Benutzer1 fehlschlägt, versuche es mit Benutzer2
-                con = DriverManager.getConnection(URL, USER2, PASSWORD2);
-            } catch (SQLException e2) {
-                e2.printStackTrace();
-                return;
-            }
-        }
-
-        if (con != null) {
+        if (connection != null) {
             //SQL Abfrage ausführen
             try {
-                String query = "SELECT * FROM patients";
-                Statement stmt = con.createStatement();
+               // String query = "SELECT * FROM patients";
+                String query = "SELECT SVNR, Nachname, Vorname, Geburtsdatum, Straße, Hausnummer, PLZ, Ort FROM patients";
+                Statement stmt = connection.createStatement();
                 ResultSet rs = stmt.executeQuery(query);
 
-                //TAbelle wird geleert bevor neue Daten angezeigt werden
+                //Tabelle wird geleert bevor neue Daten angezeigt werden
                 tableModel.setRowCount(0);
 
                 //Spaltennamen hinzufügen
@@ -113,21 +93,8 @@ public class GUIMenu extends JFrame {
             } catch (SQLException e){
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Fehler beim Laden der Patientendaten");
-            } finally {
-                //Schließe Verbindung
-                try {
-                    if (con != null) {
-                        con.close();
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
             }
         }
 
     }
-
-
-
-
 }

@@ -69,7 +69,7 @@ public class GUILogin extends JFrame {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String validusername = "magda13";
+                String validusername = "dottoreamore";
                 String validpasswort = "1234";
 
                 String enteredUsername = textFieldBenutzername.getText();

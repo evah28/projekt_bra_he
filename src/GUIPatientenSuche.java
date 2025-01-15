@@ -42,7 +42,7 @@ public class GUIPatientenSuche extends JFrame {
 
 
         // Tabelle für Suchergebnisse
-        String[] spalten = {"ID", "Nachname", "Vorname", "Geburtsdatum", "Diagnose", "Straße", "Hausnummer", "PLZ", "Ort"};
+        String[] spalten = {"SVNR", "Nachname", "Vorname", "Geburtsdatum", "Straße", "Hausnummer", "PLZ", "Ort", "Diagnose"};
         DefaultTableModel tableModel = new DefaultTableModel(spalten, 0);
         JTable patientenTabelle = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(patientenTabelle);
@@ -67,7 +67,6 @@ public class GUIPatientenSuche extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String suchbegriff = textSuche.getText();
-                Connection con = null;
 
                 //Eingabe darf nicht leer sein
                 if(suchbegriff.isEmpty()) {
@@ -81,32 +80,13 @@ public class GUIPatientenSuche extends JFrame {
                     return;
                 }
 
-                //Verbindung DB
-                String URL = "jdbc:mysql://localhost:3306/project_db";
-                String USER1 = "root";
-                String PASSWORD1 = "FHmagdalena0504?";
-                String USER2 = "root";
-                String PASSWORD2 = "Tm20!Ka89#MaJO";
+               //Methode dbVerbidung aus der Patientenklasse aufrufen
+                Connection connection = Patient.dbVerbindung();
 
-
-                try {
-                    // Zuerst versuchen, mit dem ersten Benutzer eine Verbindung aufzubauen
-                    con = DriverManager.getConnection(URL, USER1, PASSWORD1);
-                } catch (SQLException e1) {
-                    try {
-                        // Wenn Benutzer1 fehlschlägt, versuche es mit Benutzer2
-                        con = DriverManager.getConnection(URL, USER2, PASSWORD2);
-                    } catch (SQLException e2) {
-                        e2.printStackTrace();
-                        JOptionPane.showMessageDialog(suchFenster, "Keine Verbindung zur Datenbank möglich.");
-                        return; //Abbrechen, wenn keine Verbindung möglich ist
-                    }
-                }
-
-                   if( con != null) {
+                if( connection != null) {
                        try {
                            String sql = "SELECT * FROM patients WHERE SVNR LIKE ?";
-                           PreparedStatement pst = con.prepareStatement(sql);
+                           PreparedStatement pst = connection.prepareStatement(sql);
                            pst.setString(1, "%" + suchbegriff + "%");
                            ResultSet rs = pst.executeQuery();
 
@@ -137,12 +117,7 @@ public class GUIPatientenSuche extends JFrame {
                 } catch(SQLException ex){
                     ex.printStackTrace();
                     JOptionPane.showMessageDialog(suchFenster, "Fehler bei der Datenbankverbindung!");
-                } finally{
-                          try{
-                              con.close();//Verbindung schließen
-                          } catch (SQLException ex) {
-                              ex.printStackTrace();
-                          }
+
                        }
             }
             }
@@ -161,35 +136,17 @@ public class GUIPatientenSuche extends JFrame {
             long svnr = (long)tableModel.getValueAt(selectedRow, 0);
             int confirm = JOptionPane.showConfirmDialog(suchFenster, "Möchten Sie den Patienten mit der Sozialversicherungsnummer " + svnr + " löschen?","Bestätigung",JOptionPane.YES_NO_OPTION);
 
-            //Verbindung DB
-            String URL = "jdbc:mysql://localhost:3306/project_db";
-            String USER1 = "root";
-            String PASSWORD1 = "FHmagdalena0504?";
-            String USER2 = "root";
-            String PASSWORD2 = "Tm20!Ka89#MaJO";
 
                if(confirm == JOptionPane.YES_OPTION) {
                    String suchbegriff = textSuche.getText();
-                   Connection con = null;
 
-                   try {
-                       // Zuerst versuchen, mit dem ersten Benutzer eine Verbindung aufzubauen
-                       con = DriverManager.getConnection(URL, USER1, PASSWORD1);
-                   } catch (SQLException e1) {
-                       try {
-                           // Wenn Benutzer1 fehlschlägt, versuche es mit Benutzer2
-                           con = DriverManager.getConnection(URL, USER2, PASSWORD2);
-                       } catch (SQLException e2) {
-                           e2.printStackTrace();
-                           JOptionPane.showMessageDialog(suchFenster, "Keine Verbindung zur Datenbank möglich.");
-                           return; //Abbrechen, wenn keine Verbindung möglich ist
-                       }
-                   }
+                   //Aufrufen der dbVerbindung Methode aus der Patientenklasse
+                   Connection connection = Patient.dbVerbindung();
 
-                   if( con != null) {
+                   if( connection != null) {
                        try {
                            String sql = "DELETE FROM patients WHERE SVNR = ?";
-                           PreparedStatement pst = con.prepareStatement(sql);
+                           PreparedStatement pst = connection.prepareStatement(sql);
                            pst.setLong(1, svnr);
                            int rowsDeleted = pst.executeUpdate();
 
@@ -280,33 +237,15 @@ public class GUIPatientenSuche extends JFrame {
 
                 //Änderungen speichern
                 String suchbegriff = textSuche.getText();
-                Connection con = null;
 
-                //Verbindung DB
-                String URL = "jdbc:mysql://localhost:3306/project_db";
-                String USER1 = "root";
-                String PASSWORD1 = "FHmagdalena0504?";
-                String USER2 = "root";
-                String PASSWORD2 = "Tm20!Ka89#MaJO";
+                //Aufrufen der Methode dbVerbindung in der Patientenmethode
+                Connection connection = Patient.dbVerbindung();
 
-                try {
-                    // Zuerst versuchen, mit dem ersten Benutzer eine Verbindung aufzubauen
-                    con = DriverManager.getConnection(URL, USER1, PASSWORD1);
-                } catch (SQLException e1b) {
-                    try {
-                        // Wenn Benutzer1 fehlschlägt, versuche es mit Benutzer2
-                        con = DriverManager.getConnection(URL, USER2, PASSWORD2);
-                    } catch (SQLException e2) {
-                        e2.printStackTrace();
-                        JOptionPane.showMessageDialog(suchFenster, "Keine Verbindung zur Datenbank möglich.");
-                        return; //Abbrechen, wenn keine Verbindung möglich ist
-                    }
-                }
 
-                if( con != null) {
+                if( connection != null) {
                     try {
                         String sql = "UPDATE patients SET Nachname = ?, Vorname = ?, Geburtsdatum = ?, Diagnose = ?, Straße = ?, Hausnummer = ?, PLZ = ?, Ort = ? WHERE SVNR = ?";
-                        PreparedStatement pst = con.prepareStatement(sql);
+                        PreparedStatement pst = connection.prepareStatement(sql);
                         pst.setString(1, textnachname.getText());
                         pst.setString(2, textvorname.getText());
                         pst.setDate(3, Date.valueOf(textgeburtsdatum.getText()));

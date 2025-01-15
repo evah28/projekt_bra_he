@@ -117,7 +117,7 @@ public class GUIPatientenSuche extends JFrame {
                     while (rs.next()) {
                         eintragGefunden = true; //Eintrag wurde gefunden
                         Object[] row = {
-                            rs.getInt("SVNR"),
+                            rs.getLong("SVNR"),
                             rs.getString("Nachname"),
                             rs.getString("Vorname"),
                             rs.getDate("Geburtsdatum"),
@@ -158,7 +158,7 @@ public class GUIPatientenSuche extends JFrame {
                 JOptionPane.showMessageDialog(suchFenster, "Bitte wählen Sie einen Patienten aus, um ihn zu löschen.","Hinweis", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            int svnr = (int)tableModel.getValueAt(selectedRow, 0);
+            long svnr = (long)tableModel.getValueAt(selectedRow, 0);
             int confirm = JOptionPane.showConfirmDialog(suchFenster, "Möchten Sie den Patienten mit der Sozialversicherungsnummer " + svnr + " löschen?","Bestätigung",JOptionPane.YES_NO_OPTION);
 
             //Verbindung DB
@@ -190,7 +190,7 @@ public class GUIPatientenSuche extends JFrame {
                        try {
                            String sql = "DELETE FROM patients WHERE SVNR = ?";
                            PreparedStatement pst = con.prepareStatement(sql);
-                           pst.setInt(1, svnr);
+                           pst.setLong(1, svnr);
                            int rowsDeleted = pst.executeUpdate();
 
                            if(rowsDeleted > 0) {
@@ -216,7 +216,7 @@ public class GUIPatientenSuche extends JFrame {
             }
 
             //Patientendaten aus Tabelle holen
-            int svnr = (int)tableModel.getValueAt(selectedRow, 0);
+            long svnr = (long)tableModel.getValueAt(selectedRow, 0);
             String nachname = (String)tableModel.getValueAt(selectedRow, 1);
             String vorname = (String)tableModel.getValueAt(selectedRow, 2);
             Date geburtsdatum = (Date)tableModel.getValueAt(selectedRow, 3);
@@ -315,7 +315,7 @@ public class GUIPatientenSuche extends JFrame {
                         pst.setInt(6, Integer.parseInt(texthausnummer.getText()));
                         pst.setInt(7, Integer.parseInt(textplz.getText()));
                         pst.setString(8, textort.getText());
-                        pst.setInt(9, svnr);
+                        pst.setLong(9, svnr);
 
                         int rowsUpdated = pst.executeUpdate();
 

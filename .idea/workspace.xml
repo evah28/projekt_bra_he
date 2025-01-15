@@ -4,12 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0258ad0a-b25d-45a7-b6fd-9ccfd1f81b56" name="Changes" comment="Patienten-DB bei Menü anzeigen">
+    <list default="true" id="0258ad0a-b25d-45a7-b6fd-9ccfd1f81b56" name="Changes" comment="GUI Löschen und Bearbeiten">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUIMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUIMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUIPatientenSuche.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUIPatientenSuche.form" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GUIPatientenSuche.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUIPatientenSuche.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,12 +37,12 @@
     &quot;assignee&quot;: &quot;captainIQ123&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/captainIQ123/projekt_bra_he.git",
-    "accountId": "09bcdb9d-35ed-4c9d-ab55-564284b0017b"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/captainIQ123/projekt_bra_he.git&quot;,
+    &quot;accountId&quot;: &quot;09bcdb9d-35ed-4c9d-ab55-564284b0017b&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -63,7 +60,7 @@
     &quot;UI_DESIGNER_EDITOR_MODE.PaletteManager.WIDTH&quot;: &quot;234&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/evahe/OneDrive/Dokumente/mysql-connector-j-9.1.0/mysql-connector-j-9.1.0.jar&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/magda/IdeaProjects/projekt_bra_he&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
@@ -97,6 +94,13 @@
       <workItem from="1736337094119" duration="129000" />
       <workItem from="1736338022881" duration="12433000" />
       <workItem from="1736422953915" duration="6557000" />
+      <workItem from="1736453103962" duration="1161000" />
+      <workItem from="1736887371023" duration="86000" />
+      <workItem from="1736889697270" duration="1514000" />
+      <workItem from="1736927469995" duration="325000" />
+      <workItem from="1736930734970" duration="452000" />
+      <workItem from="1736931277073" duration="1453000" />
+      <workItem from="1736951145297" duration="414000" />
     </task>
     <task id="LOCAL-00001" summary="GUI Login">
       <option name="closed" value="true" />
@@ -130,7 +134,15 @@
       <option name="project" value="LOCAL" />
       <updated>1736346308271</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="GUI Löschen und Bearbeiten">
+      <option name="closed" value="true" />
+      <created>1736438408347</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1736438408347</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -152,6 +164,7 @@
     <MESSAGE value="DB Anbindung" />
     <MESSAGE value="DB Anbindung Eva" />
     <MESSAGE value="Patienten-DB bei Menü anzeigen" />
-    <option name="LAST_COMMIT_MESSAGE" value="Patienten-DB bei Menü anzeigen" />
+    <MESSAGE value="GUI Löschen und Bearbeiten" />
+    <option name="LAST_COMMIT_MESSAGE" value="GUI Löschen und Bearbeiten" />
   </component>
 </project>

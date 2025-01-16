@@ -1,14 +1,19 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class Patient {
 
-    private int id;
-    private String vorname;
-    private String nachname;
-    private String geburtsdatum;
-    private String diagnose;
+    private int SVNR;
+    private String Vorname;
+    private String Nachname;
+    private String Geburtsdatum;
+    private String Straße;
+    private String Hausnummer;
+    private String PLZ;
+    private String Ort;
+    private String Diagnose;
 
     private static final String URL = "jdbc:mysql://localhost:3306/project_db";
     private static final String USER1 = "root";
@@ -19,12 +24,16 @@ public class Patient {
 
 
     //Konstruktor
-    public Patient(int id, String vorname, String nachname, String geburtsdatum, String diagnose) {
-        this.id = id;
-        this.vorname = vorname;
-        this.nachname = nachname;
-        this.geburtsdatum = geburtsdatum;
-        this.diagnose = diagnose;
+    public Patient(int SVNR, String Vorname, String Nachname, String Geburtsdatum, String Straße, String Hausnummer, String PLZ, String Ort, String Diagnose) {
+        this.SVNR = SVNR;
+        this.Vorname = Vorname;
+        this.Nachname = Nachname;
+        this.Geburtsdatum = Geburtsdatum;
+        this.Straße = Straße;
+        this.Hausnummer = Hausnummer;
+        this.PLZ = PLZ;
+        this.Ort = Ort;
+        this.Diagnose = Diagnose;
     }
 
 
@@ -63,55 +72,109 @@ public class Patient {
 
     }
 
+    public static boolean patientEinfuegen(int SVNR, String Vorname, String Nachname, String Geburtsdatum, String Straße, String Hausnummer, String PLZ, String Ort, String Diagnose) {
 
-    public int getId() {
-        return id;
+
+
+            String query = "INSERT INTO patients (SVNR, Vorname, Nachname, Geburtsdatum, Straße, Hausnummer, PLZ, Ort, Diagnose) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)";
+
+            Connection connection = dbVerbindung(); //Verbindung zur Datenbank herstellen
+        if (connection == null) {
+            System.out.println("Keine Verbindung zur Datenbank!");
+            return false;
+        }
+
+            try (PreparedStatement prstmt = connection.prepareStatement(query)) {
+                prstmt.setInt(1, SVNR);
+                prstmt.setString(2, Vorname);
+                prstmt.setString(3, Nachname);
+                prstmt.setString(4, Geburtsdatum);
+                prstmt.setString(5, Straße);
+                prstmt.setString(6, Hausnummer);
+                prstmt.setString(7, PLZ);
+                prstmt.setString(8, Ort);
+                prstmt.setString(9, Diagnose);
+
+                int rowsInserted;
+                rowsInserted = prstmt.executeUpdate();
+                return rowsInserted > 0; //gibt true zurück, wenn ein Patient eingefügt wurde
+            } catch (SQLException e) {
+                System.out.println("Fehler beim Einfügen des Patienten: " + e.getMessage());
+                e.printStackTrace();
+                return false;
+            }
+        }
+
+    public int getSVNR() {
+        return SVNR;
     }
-
-    public void setId(int id) {
-        this.id = id;
+    public void setSVNR(int SVNR) {
+        this.SVNR = SVNR;
     }
 
     public String getVorname() {
-        return vorname;
+        return Vorname;
     }
-
-    public void setVorname(String vorname) {
-        this.vorname = vorname;
+    public void setVorname(String Vorname) {
+        this.Vorname = Vorname;
     }
 
     public String getNachname() {
-        return nachname;
+        return Nachname;
     }
-
-    public void setNachname(String nachname) {
-        this.nachname = nachname;
+    public void setNachname(String Nachname) {
+        this.Nachname = Nachname;
     }
 
     public String getGeburtsdatum() {
-        return geburtsdatum;
+        return Geburtsdatum;
     }
-
-    public void setGeburtsdatum(String geburtsdatum) {
-        this.geburtsdatum = geburtsdatum;
+    public void setGeburtsdatum(String Geburtsdatum) {
+        this.Geburtsdatum = Geburtsdatum;
     }
 
     public String getDiagnose() {
-        return diagnose;
+        return Diagnose;
+    }
+    public void setDiagnose(String Diagnose) {
+        this.Diagnose = Diagnose;
     }
 
-    public void setDiagnose(String diagnose) {
-        this.diagnose = diagnose;
+    public String getStraße() {return Straße;}
+    public void setStraße(String Straße) {this.Straße = Straße;}
+
+    public String getHausnummer() {
+        return Hausnummer;
+    }
+
+    public void setHausnummer(String hausnummer) {
+        Hausnummer = hausnummer;
+    }
+
+    public String getPLZ() {
+        return PLZ;
+    }
+
+    public void setPLZ(String PLZ) {
+        this.PLZ = PLZ;
+    }
+
+    public String getOrt() {
+        return Ort;
+    }
+
+    public void setOrt(String ort) {
+        Ort = ort;
     }
 
     @Override
     public String toString() {
         return "Patient{" +
-                "id=" + id +
-                ", vorname='" + vorname + '\'' +
-                ", nachname='" + nachname + '\'' +
-                ", geburtsdatum='" + geburtsdatum + '\'' +
-                ", diagnose='" + diagnose + '\'' +
+                "id=" + SVNR +
+                ", vorname='" + Vorname + '\'' +
+                ", nachname='" + Nachname + '\'' +
+                ", geburtsdatum='" + Geburtsdatum + '\'' +
+                ", diagnose='" + Diagnose + '\'' +
                 '}';
     }
 }

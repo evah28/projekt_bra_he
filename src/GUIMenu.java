@@ -38,6 +38,8 @@ public class GUIMenu extends JFrame {
 
         //Menü-Item Aktionen
         itemEinfügen.addActionListener(e -> {
+            GUIPatientEinfuegen guiPatientEinfuegen = new GUIPatientEinfuegen(this);
+            guiPatientEinfuegen.setVisible(true);
         });
         itemExportieren.addActionListener(e -> {
         });

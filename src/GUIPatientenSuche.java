@@ -101,11 +101,11 @@ public class GUIPatientenSuche extends JFrame {
                             rs.getString("Nachname"),
                             rs.getString("Vorname"),
                             rs.getDate("Geburtsdatum"),
-                            rs.getString("Diagnose"),
                             rs.getString("Straße"),
                             rs.getInt("Hausnummer"),
                             rs.getInt("PLZ"),
                             rs.getString("Ort"),
+                            rs.getString("Diagnose"),
                         };
                         tableModel.addRow(row);
 
@@ -177,11 +177,11 @@ public class GUIPatientenSuche extends JFrame {
             String nachname = (String)tableModel.getValueAt(selectedRow, 1);
             String vorname = (String)tableModel.getValueAt(selectedRow, 2);
             Date geburtsdatum = (Date)tableModel.getValueAt(selectedRow, 3);
-            String diagnose = (String)tableModel.getValueAt(selectedRow, 4);
-            String strasse = (String)tableModel.getValueAt(selectedRow, 5);
-            int hausnummer = (int)tableModel.getValueAt(selectedRow, 6);
-            int PLZ = (int)tableModel.getValueAt(selectedRow, 7);
-            String ort = (String)tableModel.getValueAt(selectedRow, 8);
+            String strasse = (String)tableModel.getValueAt(selectedRow, 4);
+            int hausnummer = (int)tableModel.getValueAt(selectedRow, 5);
+            int PLZ = (int)tableModel.getValueAt(selectedRow, 6);
+            String ort = (String)tableModel.getValueAt(selectedRow, 7);
+            String diagnose = (String)tableModel.getValueAt(selectedRow, 8);
 
             //Neues Fenster für die Bearbeitung
             JFrame bearbeitenFenster = new JFrame("Patient bearbeiten");

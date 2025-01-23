@@ -2,6 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public class GUIPatientEinfuegen extends JFrame {
 
@@ -19,12 +22,16 @@ public class GUIPatientEinfuegen extends JFrame {
     private JTextField textFieldDiagnose;
     private JButton buttonSpeichern;
     private JButton buttonAbbrechen;
+    private JComboBox comboBoxGender;
+    private JComboBox comboBoxNationality;
+    private JComboBox comboBoxInsurance;
+
 
 
     public GUIPatientEinfuegen(GUIMenu guiMenu){
         this.GUIMenu = guiMenu;
         setTitle("Neuen Patient hinzufügen");
-        setSize(400,400);
+        setSize(400,550);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); //zentrieren: Fenster in der Mitte
 
@@ -126,8 +133,42 @@ public class GUIPatientEinfuegen extends JFrame {
         textFieldDiagnose = new JTextField(20);
         contentPaneEinfuegen.add(textFieldDiagnose,gbc);
 
+       //ComboBoxen
+        // Geschlecht ComboBox
+        gbc.gridx = 0; gbc.gridy = 9;
+        gbc.anchor = GridBagConstraints.WEST;
+        contentPaneEinfuegen.add(new JLabel("Geschlecht"), gbc);
+
+        gbc.gridx = 1; gbc.gridy = 9;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        comboBoxGender = new JComboBox<>(new String[] {"männlich", "weiblich", "divers"});
+        comboBoxGender.setPreferredSize(new Dimension(200, 30));
+        contentPaneEinfuegen.add(comboBoxGender, gbc);
+
+// Nationalität ComboBox
+        gbc.gridx = 0; gbc.gridy = 10;
+        gbc.anchor = GridBagConstraints.WEST;
+        contentPaneEinfuegen.add(new JLabel("Nationalität"), gbc);
+
+        gbc.gridx = 1; gbc.gridy = 10;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        comboBoxNationality = new JComboBox<>(new String[] {"Österreich", "Deutschland", "Schweiz", "andere"});
+        comboBoxNationality.setPreferredSize(new Dimension(200, 30));
+        contentPaneEinfuegen.add(comboBoxNationality, gbc);
+
+// Versicherung ComboBox
+        gbc.gridx = 0; gbc.gridy = 11;
+        gbc.anchor = GridBagConstraints.WEST;
+        contentPaneEinfuegen.add(new JLabel("Versicherung"), gbc);
+
+        gbc.gridx = 1; gbc.gridy = 11;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        comboBoxInsurance = new JComboBox<>(new String[] {"ÖKG", "SVS", "BVAEB", "andere"});
+        comboBoxInsurance.setPreferredSize(new Dimension(200, 30));
+        contentPaneEinfuegen.add(comboBoxInsurance, gbc);
+
         //Speichern Button
-        gbc.gridx=0; gbc.gridy=9;
+        gbc.gridx=0; gbc.gridy=12;
         gbc.gridwidth = 2; //Button geht über zwei Spalten
         gbc.fill=GridBagConstraints.HORIZONTAL;
         buttonSpeichern = new JButton("Speichern");
@@ -135,7 +176,7 @@ public class GUIPatientEinfuegen extends JFrame {
         //contentPaneEinfuegen.add(new JLabel(""));
 
         //Abbrechen Button
-        gbc.gridx=0; gbc.gridy=10;
+        gbc.gridx=0; gbc.gridy=13;
         gbc.gridwidth = 2; //Button geht über zwei Spalten
         gbc.fill=GridBagConstraints.HORIZONTAL;
         buttonAbbrechen = new JButton("Abbrechen");
@@ -144,29 +185,54 @@ public class GUIPatientEinfuegen extends JFrame {
 
         //Action Listener für Button Speichern
         buttonSpeichern.addActionListener(new ActionListener() {
-            @Override
+           @Override
             public void actionPerformed(ActionEvent e) {
-                try{
-                int SVNR = Integer.parseInt(textFieldSVNR.getText());
-                boolean erfolgreich = Patient.patientEinfuegen(
-                        SVNR, textFieldVorname.getText(), textFieldNachname.getText(),
-                        textFieldGeburtsdatum.getText(), textFieldStraße.getText(), textFieldHausnummer.getText(),
-                        textFieldPLZ.getText(),textFieldOrt.getText(),textFieldDiagnose.getText());
+              if (validateInput()) {
+                 try {
+                    long svnr = Long.parseLong(textFieldSVNR.getText());
+                    String eingabeVorname = textFieldVorname.getText();
+                    String eingabeNachname = textFieldNachname.getText();
+                    String eingabeGeburtsdatum = textFieldGeburtsdatum.getText();
+                    String eingabeStraße = textFieldStraße.getText();
+                    String eingabeHausnummer = textFieldHausnummer.getText();
+                    String eingabePlz = textFieldPLZ.getText();
+                    String eingabeOrt = textFieldOrt.getText();
+                    String eingabeDiagnose = textFieldDiagnose.getText();
+                    String eingabeGender = (String) comboBoxGender.getSelectedItem();
+                    String eingabeNationality = (String) comboBoxNationality.getSelectedItem();
+                    String eingabeInsurance = (String) comboBoxInsurance.getSelectedItem();
 
-                //boolean erfolgreichHinzugefuegt = Patient.patientEinfuegen(SVNR, Vorname, Nachname, Geburtsdatum, Strasse, Hausnummer, PLZ, Ort, Diagnose);
-                if(erfolgreich){
-                    JOptionPane.showMessageDialog(null, "Patient erfolgreich hinzugefügt.");
-                    dispose();//Fenster schließen
-                    GUIMenu menu = new GUIMenu();
-                    menu.setVisible(true);
-                } else{
-                    JOptionPane.showMessageDialog(null, "Fehler beim Hinzufügen des Patienten!");
-                }
-            }catch(NumberFormatException ex){
-                    JOptionPane.showMessageDialog(null,"Bitte geben Sie eine gültige SVNR ein.");
-                }
-        }
+                    //Überprüfen ob SVNR nur 1mal vergeben
+                     if (!SVNReinzigartig(svnr)) {
+                         JOptionPane.showMessageDialog(GUIPatientEinfuegen.this, "Die SVNR ist bereits vergeben!", "Fehler", JOptionPane.ERROR_MESSAGE);
+                         return;
+                     }
+
+                     //Alle Eingabefelder müssen ausgefüllt sein
+                     if (eingabeVorname.isEmpty() || eingabeNachname.isEmpty() || eingabeGeburtsdatum.isEmpty() || eingabeStraße.isEmpty() || eingabeHausnummer.isEmpty() || eingabePlz.isEmpty() || eingabeOrt.isEmpty() || eingabeDiagnose.isEmpty() || eingabeGender == null || eingabeNationality == null || eingabeInsurance == null) {
+                         JOptionPane.showMessageDialog(contentPaneEinfuegen, "Bitte alle Felder ausfüllen!", "Eingabefehler", JOptionPane.ERROR_MESSAGE);
+                         return;
+                     }
+
+                     boolean erfolgreich = Patient.patientEinfuegen(
+                             svnr, eingabeVorname, eingabeNachname, eingabeGeburtsdatum, eingabeStraße,
+                             eingabeHausnummer, eingabePlz, eingabeOrt, eingabeDiagnose,
+                             eingabeGender, eingabeNationality, eingabeInsurance);
+                     if (erfolgreich) {
+                         JOptionPane.showMessageDialog(null, "Patient erfolgreich hinzugefügt.");
+                         dispose();//Fenster schließen
+                         GUIMenu menu = new GUIMenu();
+                         menu.setVisible(true);
+                     } else {
+                         JOptionPane.showMessageDialog(null, "Fehler beim Hinzufügen des Patienten!");
+                     }
+                 } catch (NumberFormatException ex) {
+                     JOptionPane.showMessageDialog(null, "Bitte geben Sie eine gültige SVNR ein!");
+                 }
+              }
+           }
         });
+
 
         //Action Listener Abbrechen-Button
         buttonAbbrechen.addActionListener(new ActionListener() {
@@ -178,7 +244,46 @@ public class GUIPatientEinfuegen extends JFrame {
             }
         });
 
-    }
 }
+
+    public boolean SVNReinzigartig(long svnr){
+        try(Connection connection = Patient.dbVerbindung();
+            PreparedStatement stmt = connection.prepareStatement("SELECT COUNT (*) FROM patients WHERE SVNR = ?")){
+            stmt.setLong(1, svnr);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()){
+                return rs.getInt(1)==0;
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean validateInput(){
+        String svnrText = textFieldSVNR.getText();
+        String geburtsdatum = textFieldGeburtsdatum.getText();
+        String plz = textFieldPLZ.getText();
+
+        if (!svnrText.matches("\\d+")) {
+            JOptionPane.showMessageDialog(this, "Die SVNR muss eine Zahl sein!", "Fehler", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if (!geburtsdatum.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            JOptionPane.showMessageDialog(this, "Das Geburtsdatum muss im Format YYYY-MM-DD sein!", "Fehler", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if (!plz.matches("\\d+")) {
+            JOptionPane.showMessageDialog(this, "Die PLZ darf nur Zahlen enthalten!", "Fehler", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
+}
+
+
 
 

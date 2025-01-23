@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 public class Patient {
 
-    private int SVNR;
+    private long SVNR;
     private String Vorname;
     private String Nachname;
     private String Geburtsdatum;
@@ -21,7 +21,7 @@ public class Patient {
 
 
     //Konstruktor
-    public Patient(int SVNR, String Vorname, String Nachname, String Geburtsdatum, String Straße, String Hausnummer, String PLZ, String Ort, String Diagnose) {
+    public Patient(long SVNR, String Vorname, String Nachname, String Geburtsdatum, String Straße, String Hausnummer, String PLZ, String Ort, String Diagnose) {
         this.SVNR = SVNR;
         this.Vorname = Vorname;
         this.Nachname = Nachname;
@@ -38,15 +38,11 @@ public class Patient {
     public static Connection dbVerbindung() {
 
         Connection connection = null;
-
         try {
             connection = DriverManager.getConnection(URL, USER1, PASSWORD1);
         } catch (SQLException e1) {
-
-
         }
         return connection;
-
 
                 /*DB Verbindung schließen
         if (connection != null) {
@@ -59,7 +55,7 @@ public class Patient {
 
     }
 
-    public static boolean patientEinfuegen(int SVNR, String Vorname, String Nachname, String Geburtsdatum, String Straße, String Hausnummer, String PLZ, String Ort, String Diagnose) {
+    public static boolean patientEinfuegen(long SVNR, String Vorname, String Nachname, String Geburtsdatum, String Straße, String Hausnummer, String PLZ, String Ort, String Diagnose, String eingabeGender, String eingabeNationality, String eingabeInsurance) {
 
 
 
@@ -72,7 +68,7 @@ public class Patient {
         }
 
             try (PreparedStatement prstmt = connection.prepareStatement(query)) {
-                prstmt.setInt(1, SVNR);
+                prstmt.setLong(1, SVNR);
                 prstmt.setString(2, Vorname);
                 prstmt.setString(3, Nachname);
                 prstmt.setString(4, Geburtsdatum);
@@ -92,10 +88,10 @@ public class Patient {
             }
         }
 
-    public int getSVNR() {
+    public long getSVNR() {
         return SVNR;
     }
-    public void setSVNR(int SVNR) {
+    public void setSVNR(long SVNR) {
         this.SVNR = SVNR;
     }
 

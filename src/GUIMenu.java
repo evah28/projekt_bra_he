@@ -41,6 +41,23 @@ public class GUIMenu extends JFrame {
             guiPatientEinfuegen.setVisible(true);
         });
         itemExportieren.addActionListener(e -> {
+
+            String [] options = {"Gesamte Patientenliste exportieren", " Einzelne Patientendaten exportieren"};
+            int choice = JOptionPane.showOptionDialog(
+                    this,
+                    "Bitte wählen Sie aus:",
+                    "Export auswählen",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.INFORMATION_MESSAGE,
+                    null,
+                    options,
+                    options[0]
+        );
+            if(choice == 0){
+                Export.exportGesamtePatientenliste();
+            }else if(choice == 1){
+                Export.exportEinzelnePatienten();
+            }
         });
         itemSuchen.addActionListener(e -> {
             dispose();
@@ -58,7 +75,6 @@ public class GUIMenu extends JFrame {
         add(panelTabelle);
 
         zeigePatientenDaten();
-
     }
 
     public void zeigePatientenDaten(){

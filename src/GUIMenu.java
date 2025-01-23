@@ -3,8 +3,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.sql.*;
 
-import static javax.swing.JMenuItem.*;
-
 public class GUIMenu extends JFrame {
     private JPanel contentPaneMenu;
     private JPanel panelTabelle;
@@ -38,12 +36,14 @@ public class GUIMenu extends JFrame {
 
         //Menü-Item Aktionen
         itemEinfügen.addActionListener(e -> {
+            dispose();
             GUIPatientEinfuegen guiPatientEinfuegen = new GUIPatientEinfuegen(this);
             guiPatientEinfuegen.setVisible(true);
         });
         itemExportieren.addActionListener(e -> {
         });
         itemSuchen.addActionListener(e -> {
+            dispose();
             GUIPatientenSuche suche = new GUIPatientenSuche();
             suche.patientenSuchen();
         });
@@ -97,6 +97,5 @@ public class GUIMenu extends JFrame {
                 JOptionPane.showMessageDialog(this, "Fehler beim Laden der Patientendaten");
             }
         }
-
     }
 }

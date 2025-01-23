@@ -24,7 +24,7 @@ public class GUIPatientEinfuegen extends JFrame {
     public GUIPatientEinfuegen(GUIMenu guiMenu){
         this.GUIMenu = guiMenu;
         setTitle("Neuen Patient hinzufügen");
-        setSize(800,600);
+        setSize(400,400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); //zentrieren: Fenster in der Mitte
 
@@ -152,19 +152,13 @@ public class GUIPatientEinfuegen extends JFrame {
                         SVNR, textFieldVorname.getText(), textFieldNachname.getText(),
                         textFieldGeburtsdatum.getText(), textFieldStraße.getText(), textFieldHausnummer.getText(),
                         textFieldPLZ.getText(),textFieldOrt.getText(),textFieldDiagnose.getText());
-                /*String Vorname = textFieldVorname.getText();
-                String Nachname = textFieldNachname.getText();
-                String Geburtsdatum = textFieldGeburtsdatum.getText();
-                String Strasse = textFieldStrasse.getText();
-                String Hausnummer = textFieldHausnummer.getText();
-                String PLZ = textFieldPLZ.getText();
-                String Ort = textFieldOrt.getText();
-                String Diagnose = textFieldDiagnose.getText());*/
 
                 //boolean erfolgreichHinzugefuegt = Patient.patientEinfuegen(SVNR, Vorname, Nachname, Geburtsdatum, Strasse, Hausnummer, PLZ, Ort, Diagnose);
                 if(erfolgreich){
                     JOptionPane.showMessageDialog(null, "Patient erfolgreich hinzugefügt.");
-                    dispose(); //Fenster schließen
+                    dispose();//Fenster schließen
+                    GUIMenu menu = new GUIMenu();
+                    menu.setVisible(true);
                 } else{
                     JOptionPane.showMessageDialog(null, "Fehler beim Hinzufügen des Patienten!");
                 }
@@ -179,8 +173,11 @@ public class GUIPatientEinfuegen extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
+                GUIMenu menu = new GUIMenu();
+                menu.setVisible(true);
             }
         });
+
     }
 }
 

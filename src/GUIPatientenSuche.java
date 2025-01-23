@@ -123,8 +123,17 @@ public class GUIPatientenSuche extends JFrame {
             }
         });
 
+
         //Action Listener für Abbrechen-Button
-        buttonAbbrechen.addActionListener(e -> suchFenster.dispose());
+        buttonAbbrechen.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GUIMenu menu = new GUIMenu();
+                menu.setVisible(true);
+                suchFenster.dispose();
+            }
+        });
+
 
         //Action Listener für Löschen Button
         buttonLöschen.addActionListener(e -> {

@@ -6,9 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="0258ad0a-b25d-45a7-b6fd-9ccfd1f81b56" name="Changes" comment="Verbesserung Patient einfügen Methode, Fehlermeldungen">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUIPatientEinfuegen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUIPatientEinfuegen.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GUIPatientenSuche.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUIPatientenSuche.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Patient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Patient.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

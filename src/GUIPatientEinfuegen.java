@@ -150,7 +150,8 @@ public class GUIPatientEinfuegen extends JFrame {
 
         gbc.gridx = 1; gbc.gridy = 9;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        comboBoxGender = new JComboBox<>(new String[] {"männlich", "weiblich", "divers"});
+        comboBoxGender = new JComboBox<>();
+        comboBoxGender.setModel(getComboBoxModel("SELECT genderPatients FROM gender", "genderPatients"));
         comboBoxGender.setPreferredSize(new Dimension(200, 30));
         contentPaneEinfuegen.add(comboBoxGender, gbc);
 
@@ -161,7 +162,8 @@ public class GUIPatientEinfuegen extends JFrame {
 
         gbc.gridx = 1; gbc.gridy = 10;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        comboBoxNationality = new JComboBox<>(new String[] {"Österreich", "Deutschland", "Schweiz", "andere"});
+        comboBoxNationality = new JComboBox<>();
+        comboBoxNationality.setModel(getComboBoxModel("SELECT nationalityPatients FROM nationality","nationalityPatients"));
         comboBoxNationality.setPreferredSize(new Dimension(200, 30));
         contentPaneEinfuegen.add(comboBoxNationality, gbc);
 
@@ -172,7 +174,8 @@ public class GUIPatientEinfuegen extends JFrame {
 
         gbc.gridx = 1; gbc.gridy = 11;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        comboBoxInsurance = new JComboBox<>(new String[] {"ÖKG", "SVS", "BVAEB", "andere"});
+        comboBoxInsurance = new JComboBox<>();
+        comboBoxInsurance.setModel(getComboBoxModel("SELECT insurancePatients FROM insurance", "insurancePatients"));
         comboBoxInsurance.setPreferredSize(new Dimension(200, 30));
         contentPaneEinfuegen.add(comboBoxInsurance, gbc);
 
@@ -214,11 +217,25 @@ public class GUIPatientEinfuegen extends JFrame {
                     String eingabeNationality = (String) comboBoxNationality.getSelectedItem();
                     String eingabeInsurance = (String) comboBoxInsurance.getSelectedItem();
 
+
+
                     //Überprüfen ob SVNR nur 1mal vergeben
                      if (!SVNReinzigartig(SVNR)) {
                          JOptionPane.showMessageDialog(GUIPatientEinfuegen.this, "Die SVNR ist bereits vergeben!", "Fehler", JOptionPane.ERROR_MESSAGE);
                          return;
                      }
+
+                     //Hole die IDs aus der Datenbank
+                     int idGender = getGenderid(eingabeGender);
+                     int idNationality = getNationalityId(eingabeNationality);
+                     int idInsurance = getInsuranceId(eingabeInsurance);
+
+                     // Wenn eine ID nicht gefunden wurde (z.B. durch ungültige Eingabe), dann abbrechen
+                     if (idGender == -1 || idNationality == -1 || idInsurance == -1) {
+                         JOptionPane.showMessageDialog(contentPaneEinfuegen, "Fehler bei der Auswahl der IDs!", "Fehler", JOptionPane.ERROR_MESSAGE);
+                         return;
+                     }
+
                      //Alle Eingabefelder müssen ausgefüllt sein
                      if (eingabeVorname.isEmpty() || eingabeNachname.isEmpty() || eingabeGeburtsdatum.isEmpty() || eingabeStraße.isEmpty() || eingabeHausnummer.isEmpty() || eingabePlz.isEmpty() || eingabeOrt.isEmpty() || eingabeDiagnose.isEmpty() || eingabeGender == null || eingabeNationality == null || eingabeInsurance == null) {
                          JOptionPane.showMessageDialog(contentPaneEinfuegen, "Bitte alle Felder ausfüllen!", "Eingabefehler", JOptionPane.ERROR_MESSAGE);
@@ -228,7 +245,7 @@ public class GUIPatientEinfuegen extends JFrame {
                      boolean erfolgreich = Patient.patientEinfuegen(
                              SVNR, eingabeVorname, eingabeNachname, eingabeGeburtsdatum, eingabeStraße,
                              eingabeHausnummer, eingabePlz, eingabeOrt, eingabeDiagnose,
-                             eingabeGender, eingabeNationality, eingabeInsurance);
+                             String.valueOf(idGender), String.valueOf(idNationality), String.valueOf(idInsurance));
                      if (erfolgreich) {
                          JOptionPane.showMessageDialog(null, "Patient erfolgreich hinzugefügt.");
                          dispose();//Fenster schließen
@@ -316,6 +333,73 @@ public class GUIPatientEinfuegen extends JFrame {
         }
         return true;
     }
+     public int getGenderid (String gender){
+        String sql = "SELECT idGender FROM gender where genderPatients = ?";
+        try (Connection connection = Patient.dbVerbindung();
+        PreparedStatement stmt = connection.prepareStatement(sql)){
+            stmt.setString(1, gender);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()){
+                return rs.getInt("idGender");
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Fehler bei der Abfrage der Gender-ID", "Fehler",JOptionPane.ERROR_MESSAGE);
+        }
+        return -1; //Falls keine ID gefunden wird
+     }
+
+    // Methode um die ID für Nationalität zu holen
+    public int getNationalityId(String nationality) {
+        String sql = "SELECT idNationality FROM nationality WHERE nationalityPatients = ?";
+        try (Connection connection = Patient.dbVerbindung();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, nationality);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("idNationality");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Fehler bei der Abfrage der Nationalität-ID", "Fehler", JOptionPane.ERROR_MESSAGE);
+        }
+        return -1;  // Falls keine ID gefunden wird
+    }
+
+     public int getInsuranceId (String insurance){
+        String sql = "SELECT idInsurance FROM insurance where insurancePatients = ?";
+        try(Connection connection = Patient.dbVerbindung();
+        PreparedStatement stmt = connection.prepareStatement(sql)){
+            stmt.setString(1,insurance);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("idInsurance");
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Fehler bei der Abfrage der Versicherungs-ID", "Fehler", JOptionPane.ERROR_MESSAGE );
+        }
+        return -1; //Falls keine ID vorhanden
+     }
+
+
+
+     //ruft Daten aus einer Datenbank ab und füllt das Modell der ComboBox mit den entsprechenden Werten.
+    public DefaultComboBoxModel<String> getComboBoxModel(String sql, String columnName) {
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+        try (Connection connection = Patient.dbVerbindung();
+             PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                model.addElement(rs.getString(columnName));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Fehler beim Laden der Daten für die ComboBox: " + e.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
+        }
+        return model;
+    }
+
 }
 
 

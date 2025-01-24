@@ -16,8 +16,8 @@ public class Patient {
     private String Diagnose;
 
     private static final String URL = "jdbc:mysql://10.25.2.145:3306/23brabec";
-    private static final String USER1 = "23brabec";
-    private static final String PASSWORD1 = "geb23";
+    private static final String USER = "23brabec";
+    private static final String PASSWORD = "geb23";
 
     /**
      * Konstruktor für die Erstellung eines Patientenobjekts.
@@ -55,7 +55,7 @@ public class Patient {
 
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection(URL, USER1, PASSWORD1);
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
         } catch (SQLException e1) {
         }
         return connection;
@@ -80,7 +80,7 @@ public class Patient {
 
     public static boolean patientEinfuegen(long SVNR, String Vorname, String Nachname, String Geburtsdatum, String Straße, String Hausnummer, String PLZ, String Ort, String Diagnose, String eingabeGender, String eingabeNationality, String eingabeInsurance) {
 
-        String query = "INSERT INTO patients (SVNR, Vorname, Nachname, Geburtsdatum, Straße, Hausnummer, PLZ, Ort, Diagnose) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)";
+        String query = "INSERT INTO patients (SVNR, vorname, nachname, geburtsdatum, Straße, hausnummer, plz, ort, diagnose, idGender, idNationality, idInsurance) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             Connection connection = dbVerbindung(); //Verbindung zur Datenbank herstellen
         if (connection == null) {
@@ -99,6 +99,10 @@ public class Patient {
                 prstmt.setString(7, PLZ);
                 prstmt.setString(8, Ort);
                 prstmt.setString(9, Diagnose);
+                prstmt.setString(10, eingabeGender);
+                prstmt.setString(11, eingabeNationality);
+                prstmt.setString(12, eingabeInsurance);
+
 
                 int rowsInserted;
                 rowsInserted = prstmt.executeUpdate();

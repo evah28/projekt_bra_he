@@ -280,26 +280,26 @@ public class GUIPatientenSuche extends JFrame {
                 if( connection != null) {
                     try {
                         // IDs für Geschlecht, Nationalität und Versicherung holen
-                        String sqlGeschlecht = "SELECT idGender FROM gender WHERE bezeichnung = ?";
+                        String sqlGeschlecht = "SELECT idGender FROM gender WHERE genderPatients = ?";
                         PreparedStatement pstGeschlecht = connection.prepareStatement(sqlGeschlecht);
                         pstGeschlecht.setString(1, (String) comboGeschlecht.getSelectedItem());
                         ResultSet rsGeschlecht = pstGeschlecht.executeQuery();
-                        int geschlechtId = rsGeschlecht.next() ? rsGeschlecht.getInt("idGender") : -1;
+                        int idGender = rsGeschlecht.next() ? rsGeschlecht.getInt("idGender") : -1;
 
-                        String sqlNationalitaet = "SELECT idNationality FROM nationality WHERE bezeichnung = ?";
+                        String sqlNationalitaet = "SELECT idNationality FROM nationality WHERE nationalityPatients = ?";
                         PreparedStatement pstNationalitaet = connection.prepareStatement(sqlNationalitaet);
                         pstNationalitaet.setString(1, (String) comboNationalitaet.getSelectedItem());
                         ResultSet rsNationalitaet = pstNationalitaet.executeQuery();
-                        int nationalitaetId = rsNationalitaet.next() ? rsNationalitaet.getInt("idNationality") : -1;
+                        int idNationality = rsNationalitaet.next() ? rsNationalitaet.getInt("idNationality") : -1;
 
-                        String sqlVersicherung = "SELECT idInsurance FROM insurance WHERE bezeichnung = ?";
+                        String sqlVersicherung = "SELECT idInsurance FROM insurance WHERE insurancePatients = ?";
                         PreparedStatement pstVersicherung = connection.prepareStatement(sqlVersicherung);
                         pstVersicherung.setString(1, (String) comboVersicherung.getSelectedItem());
                         ResultSet rsVersicherung = pstVersicherung.executeQuery();
-                        int versicherungId = rsVersicherung.next() ? rsVersicherung.getInt("idInsurance") : -1;
+                        int idInsurance = rsVersicherung.next() ? rsVersicherung.getInt("idInsurance") : -1;
 
                         // UPDATE-Statement für die Bearbeitung des Patienten
-                        String sql = "UPDATE patients SET Nachname = ?, Vorname = ?, Geburtsdatum = ?, Diagnose = ?, Straße = ?, Hausnummer = ?, PLZ = ?, Ort = ?, Geschlecht_ID = ?, Nationalitaet_ID = ?, Versicherung_ID = ? WHERE SVNR = ?";
+                        String sql = "UPDATE patients SET Nachname = ?, Vorname = ?, Geburtsdatum = ?, Diagnose = ?, Straße = ?, Hausnummer = ?, PLZ = ?, Ort = ?, idGender = ?, idNationality = ?, idInsurance = ? WHERE SVNR = ?";
                         PreparedStatement pst = connection.prepareStatement(sql);
                         pst.setString(1, textnachname.getText());
                         pst.setString(2, textvorname.getText());
@@ -309,9 +309,9 @@ public class GUIPatientenSuche extends JFrame {
                         pst.setInt(6, Integer.parseInt(texthausnummer.getText()));
                         pst.setInt(7, Integer.parseInt(textplz.getText()));
                         pst.setString(8, textort.getText());
-                        pst.setInt(9, geschlechtId);
-                        pst.setInt(10, nationalitaetId);
-                        pst.setInt(11, versicherungId);
+                        pst.setInt(9, idGender);
+                        pst.setInt(10, idNationality);
+                        pst.setInt(11, idInsurance);
                         pst.setLong(12, svnr); // Die SVNR des Patienten, der bearbeitet wird
                         int rowsUpdated = pst.executeUpdate();
 

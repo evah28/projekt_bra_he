@@ -32,11 +32,9 @@ public class Export {
 
                 ResultSet resultSet = stmt.executeQuery();
 
-
                 fileWriter.write("\uFEFF");
 
                 fileWriter.append("SVNR; Vorname; Nachname; Geburtsdatum; Straße; Hausnummer; PLZ; Ort; Diagnose\n");
-
 
                 // Patientendaten schreiben
                 while (resultSet.next()) {

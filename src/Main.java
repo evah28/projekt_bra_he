@@ -10,9 +10,7 @@ public class Main {
             GUILogin gridExample = new GUILogin();
             gridExample.setVisible(true);
         });
-
         SwingUtilities.invokeLater(() -> new GUIMenu());
-
     }
 }
 

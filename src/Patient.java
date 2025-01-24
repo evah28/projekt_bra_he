@@ -19,7 +19,6 @@ public class Patient {
     private static final String USER1 = "23brabec";
     private static final String PASSWORD1 = "geb23";
 
-
     //Konstruktor
     public Patient(long SVNR, String Vorname, String Nachname, String Geburtsdatum, String Straße, String Hausnummer, String PLZ, String Ort, String Diagnose) {
         this.SVNR = SVNR;
@@ -33,7 +32,6 @@ public class Patient {
         this.Diagnose = Diagnose;
     }
 
-
     //Methode DB Verbindung
     public static Connection dbVerbindung() {
 
@@ -44,22 +42,11 @@ public class Patient {
         }
         return connection;
 
-                /*DB Verbindung schließen
-        if (connection != null) {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }*/
-
     }
 
     public static boolean patientEinfuegen(long SVNR, String Vorname, String Nachname, String Geburtsdatum, String Straße, String Hausnummer, String PLZ, String Ort, String Diagnose, String eingabeGender, String eingabeNationality, String eingabeInsurance) {
 
-
-
-            String query = "INSERT INTO patients (SVNR, Vorname, Nachname, Geburtsdatum, Straße, Hausnummer, PLZ, Ort, Diagnose) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)";
+        String query = "INSERT INTO patients (SVNR, Vorname, Nachname, Geburtsdatum, Straße, Hausnummer, PLZ, Ort, Diagnose) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)";
 
             Connection connection = dbVerbindung(); //Verbindung zur Datenbank herstellen
         if (connection == null) {

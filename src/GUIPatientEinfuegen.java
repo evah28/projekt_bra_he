@@ -145,7 +145,7 @@ public class GUIPatientEinfuegen extends JFrame {
         comboBoxGender.setPreferredSize(new Dimension(200, 30));
         contentPaneEinfuegen.add(comboBoxGender, gbc);
 
-// Nationalität ComboBox
+        // Nationalität ComboBox
         gbc.gridx = 0; gbc.gridy = 10;
         gbc.anchor = GridBagConstraints.WEST;
         contentPaneEinfuegen.add(new JLabel("Nationalität"), gbc);
@@ -156,7 +156,7 @@ public class GUIPatientEinfuegen extends JFrame {
         comboBoxNationality.setPreferredSize(new Dimension(200, 30));
         contentPaneEinfuegen.add(comboBoxNationality, gbc);
 
-// Versicherung ComboBox
+        // Versicherung ComboBox
         gbc.gridx = 0; gbc.gridy = 11;
         gbc.anchor = GridBagConstraints.WEST;
         contentPaneEinfuegen.add(new JLabel("Versicherung"), gbc);
@@ -173,7 +173,6 @@ public class GUIPatientEinfuegen extends JFrame {
         gbc.fill=GridBagConstraints.HORIZONTAL;
         buttonSpeichern = new JButton("Speichern");
         contentPaneEinfuegen.add(buttonSpeichern,gbc);
-        //contentPaneEinfuegen.add(new JLabel(""));
 
         //Abbrechen Button
         gbc.gridx=0; gbc.gridy=13;
@@ -181,7 +180,6 @@ public class GUIPatientEinfuegen extends JFrame {
         gbc.fill=GridBagConstraints.HORIZONTAL;
         buttonAbbrechen = new JButton("Abbrechen");
         contentPaneEinfuegen.add(buttonAbbrechen,gbc);
-        //contentPaneEinfuegen.add(new JLabel(""));
 
         //Action Listener für Button Speichern
         buttonSpeichern.addActionListener(new ActionListener() {
@@ -189,7 +187,7 @@ public class GUIPatientEinfuegen extends JFrame {
             public void actionPerformed(ActionEvent e) {
               if (validateInput()) {
                  try {
-                    long svnr = Long.parseLong(textFieldSVNR.getText());
+                    long SVNR = Long.parseLong(textFieldSVNR.getText());
                     String eingabeVorname = textFieldVorname.getText();
                     String eingabeNachname = textFieldNachname.getText();
                     String eingabeGeburtsdatum = textFieldGeburtsdatum.getText();
@@ -203,7 +201,7 @@ public class GUIPatientEinfuegen extends JFrame {
                     String eingabeInsurance = (String) comboBoxInsurance.getSelectedItem();
 
                     //Überprüfen ob SVNR nur 1mal vergeben
-                     if (!SVNReinzigartig(svnr)) {
+                     if (!SVNReinzigartig(SVNR)) {
                          JOptionPane.showMessageDialog(GUIPatientEinfuegen.this, "Die SVNR ist bereits vergeben!", "Fehler", JOptionPane.ERROR_MESSAGE);
                          return;
                      }
@@ -215,7 +213,7 @@ public class GUIPatientEinfuegen extends JFrame {
                      }
 
                      boolean erfolgreich = Patient.patientEinfuegen(
-                             svnr, eingabeVorname, eingabeNachname, eingabeGeburtsdatum, eingabeStraße,
+                             SVNR, eingabeVorname, eingabeNachname, eingabeGeburtsdatum, eingabeStraße,
                              eingabeHausnummer, eingabePlz, eingabeOrt, eingabeDiagnose,
                              eingabeGender, eingabeNationality, eingabeInsurance);
                      if (erfolgreich) {
@@ -233,7 +231,6 @@ public class GUIPatientEinfuegen extends JFrame {
            }
         });
 
-
         //Action Listener Abbrechen-Button
         buttonAbbrechen.addActionListener(new ActionListener() {
             @Override
@@ -246,16 +243,19 @@ public class GUIPatientEinfuegen extends JFrame {
 
 }
 
-    public boolean SVNReinzigartig(long svnr){
+    public boolean SVNReinzigartig(long SVNR){
+       String sql = "SELECT COUNT(*) FROM patients WHERE SVNR = ?";
         try(Connection connection = Patient.dbVerbindung();
-            PreparedStatement stmt = connection.prepareStatement("SELECT COUNT (*) FROM patients WHERE SVNR = ?")){
-            stmt.setLong(1, svnr);
+            PreparedStatement stmt = connection.prepareStatement(sql)){
+            stmt.setLong(1, SVNR);
             ResultSet rs = stmt.executeQuery();
             if(rs.next()){
-                return rs.getInt(1)==0;
+                int count = rs.getInt(1);
+                return count == 0;
             }
         } catch (Exception e){
             e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Fehler bei der Überprüfung der SVNR: " + e.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
         }
         return false;
     }

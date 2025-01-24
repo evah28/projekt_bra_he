@@ -28,7 +28,6 @@ public class GUIPatientenSuche extends JFrame {
         suchFenster.setLocationRelativeTo(null);//Fenster zentrieren
         suchFenster.setLayout(new BorderLayout());
 
-
         JPanel suchPanel = new JPanel();
         suchPanel.setLayout(new FlowLayout());
         JLabel labelSuche = new JLabel("Sozialversicherungsnummer:");
@@ -39,7 +38,6 @@ public class GUIPatientenSuche extends JFrame {
         suchPanel.add(labelSuche);
         suchPanel.add(textSuche);
         suchPanel.add(buttonSuche);
-
 
         // Tabelle für Suchergebnisse
         String[] spalten = {"SVNR", "Nachname", "Vorname", "Geburtsdatum", "Straße", "Hausnummer", "PLZ", "Ort", "Diagnose"};
@@ -134,7 +132,6 @@ public class GUIPatientenSuche extends JFrame {
             }
         });
 
-
         //Action Listener für Löschen Button
         buttonLöschen.addActionListener(e -> {
             int selectedRow = patientenTabelle.getSelectedRow();
@@ -173,7 +170,6 @@ public class GUIPatientenSuche extends JFrame {
         });
 
         //Action Listener für Bearbeiten-Button
-
         buttonBearbeiten.addActionListener(e -> {
             int selectedRow = patientenTabelle.getSelectedRow();
             if(selectedRow == -1) {

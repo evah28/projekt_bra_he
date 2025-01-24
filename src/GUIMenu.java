@@ -20,6 +20,9 @@ public class GUIMenu extends JFrame {
         //Menüleiste erstellen
         JMenuBar menuBar = new JMenuBar();
 
+        //Layout Menü Leiste um Elemente näher beieinander anzuordnen
+        menuBar.setLayout(new FlowLayout(FlowLayout.LEFT)); //links ausgerichtet
+
         //Menü Funktionen -> Items direkt dem MenuBar hinzugefügt, damit sie in der Menüleiste nebeneinander angezeigt werden
         JMenuItem itemEinfügen = new JMenuItem("Einfügen");
         JMenuItem itemExportieren = new JMenuItem("Exportieren");
@@ -29,7 +32,6 @@ public class GUIMenu extends JFrame {
         menuBar.add(itemSuchen);
         menuBar.add(itemEinfügen);
         menuBar.add(itemExportieren);
-
 
         //Menüleiste hinzufügen
         setJMenuBar(menuBar);
@@ -64,7 +66,6 @@ public class GUIMenu extends JFrame {
             GUIPatientenSuche suche = new GUIPatientenSuche();
             suche.patientenSuchen();
         });
-
 
         //Panel für die Tabelle
         JPanel panelTabelle = new JPanel();

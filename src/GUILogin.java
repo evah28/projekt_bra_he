@@ -3,6 +3,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+
+/**
+ * Diese Klasse stellt das Login-Fenster zur Verfügung, in dem der Benutzer seinen Benutzernamen und sein Passwort eingibt.
+ * Wenn die Eingaben korrekt sind, wird das Hauptmenü geöffnet.
+ */
+
 public class GUILogin extends JFrame {
     private javax.swing.JPanel contentPane;
     private JLabel labelLogin;
@@ -13,8 +19,12 @@ public class GUILogin extends JFrame {
     private JButton loginButton;
     private JButton abbrechenButton;
 
+    /**
+     * Konstruktor für das Login-Fenster. Initialisiert die GUI-Komponenten und die Layout-Konfiguration.
+     */
 
     public GUILogin() {
+        //Frame Einstellungen
         setTitle("Login");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -65,10 +75,11 @@ public class GUILogin extends JFrame {
         JButton abbrechenButton = new JButton("Abbrechen");
         add(abbrechenButton, gbc);
 
-        // Button-ActionListener
+        // Button-ActionListener für Login
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+             //Vordefinierte Login-Daten
                 String validusername = "dottoreamore";
                 String validpasswort = "1234";
 
@@ -79,7 +90,7 @@ public class GUILogin extends JFrame {
                 if (validusername.equals(enteredUsername) && validpasswort.equals(enteredPassword)) {
                     System.out.println("Login erfolgreich");
 
-                    // Login-Frame ausblenden
+                    // Login-Frame schließen
                     dispose();
 
                     // Neues Menü-Frame öffnen
@@ -95,17 +106,11 @@ public class GUILogin extends JFrame {
             }
         });
 
+        //Abbrechen Button schließt das Programm
         abbrechenButton.addActionListener(e -> System.exit(0));
+        //Fenster sichtbar machen
         setVisible(true);
-
-
-
-
     }
-
-
-
-
 }
 
 

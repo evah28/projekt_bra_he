@@ -3,11 +3,20 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.sql.*;
 
+/**
+ * Diese Klasse stellt das GUI-Menü zur Anzeige von Patienten und zur Interaktion mit anderen Funktionen zur Verfügung.
+ *  * Sie ermöglicht das Einfügen von Patientendaten, das Exportieren von Daten und das Suchen von Patienten.
+ */
+
 public class GUIMenu extends JFrame {
     private JPanel contentPaneMenu;
     private JPanel panelTabelle;
     private JTable patientenTabelle;
     private DefaultTableModel tableModel;
+
+    /**
+     * Konstruktor für das GUI-Menü. Initialisiert das Fenster, die Menüleiste und die Tabellenansicht.
+     */
 
     public GUIMenu() {
 
@@ -28,12 +37,12 @@ public class GUIMenu extends JFrame {
         JMenuItem itemExportieren = new JMenuItem("Exportieren");
         JMenuItem itemSuchen = new JMenuItem("Suchen");
 
-        //Menü Items hinzufügen
+        //Menü Items zur Menüleiste hinzufügen
         menuBar.add(itemSuchen);
         menuBar.add(itemEinfügen);
         menuBar.add(itemExportieren);
 
-        //Menüleiste hinzufügen
+        //Menüleiste zum Frame hinzufügen
         setJMenuBar(menuBar);
 
         //Menü-Item Aktionen
@@ -67,6 +76,7 @@ public class GUIMenu extends JFrame {
             suche.patientenSuchen();
         });
 
+
         //Panel für die Tabelle
         JPanel panelTabelle = new JPanel();
         panelTabelle.setLayout(new BorderLayout());
@@ -75,18 +85,22 @@ public class GUIMenu extends JFrame {
         panelTabelle.add(new JScrollPane(patientenTabelle), BorderLayout.CENTER);
         add(panelTabelle);
 
+        //Methode aufrufen
         zeigePatientenDaten();
     }
 
-    public void zeigePatientenDaten(){
+    /**
+     * Zeigt die Patientendaten in der Tabelle an.
+     * Lädt die Daten aus der Datenbank und füllt die Tabelle mit den Abfrageergebnissen.
+     */
 
-        //Aufrufen der Methode dbVerbindung aus der Patientenklasse
+    public void zeigePatientenDaten(){
+        //Aufrufen der Methode zur DB-Verbindung aus der Patientenklasse
         Connection connection = Patient.dbVerbindung();
 
         if (connection != null) {
             //SQL Abfrage ausführen
             try {
-               // String query = "SELECT * FROM patients";
                 String query = "SELECT SVNR, Nachname, Vorname, Geburtsdatum, Straße, Hausnummer, PLZ, Ort FROM patients";
                 Statement stmt = connection.createStatement();
                 ResultSet rs = stmt.executeQuery(query);
@@ -102,6 +116,7 @@ public class GUIMenu extends JFrame {
                         tableModel.addColumn(metaData.getColumnName(i));
                     }
                 }
+                //Zeilen mit den Daten aus der ResultSet hinzufügen
                 while(rs.next()){
                     Object [] row = new Object[columnCount];
                     for(int i = 1; i <= columnCount; i++){

@@ -5,7 +5,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Die Klasse enthält Methoden zum Exportieren von Patientendaten in eine CSV-Datei.
+ */
+
 public class Export {
+
+    /**
+     * Exportiert die Patientendaten aus einer SQL-Abfrage in eine CSV-Datei.
+     * @param query Die SQL-Abfrage. die die zu exportierenden Patientendaten liefert.
+     * @param parameter Die Parameter für die SQL-Abfrage
+     */
 
     public static void exportCSV(String query, String[] parameter){
 
@@ -26,14 +36,15 @@ public class Export {
                  OutputStreamWriter fileWriter = new OutputStreamWriter(new FileOutputStream(dateipfad), "UTF-8");
                  FileWriter filedWriter = new FileWriter(dateipfad)){
 
+                //Parameter der Abfrage setzen
                 for(int i = 0; i < parameter.length; i++){
                     stmt.setString(i + 1, parameter[i]);
                 }
 
                 ResultSet resultSet = stmt.executeQuery();
 
+                //Byte Order Mark für UTF-8 und CSV Header
                 fileWriter.write("\uFEFF");
-
                 fileWriter.append("SVNR; Vorname; Nachname; Geburtsdatum; Straße; Hausnummer; PLZ; Ort; Diagnose\n");
 
                 // Patientendaten schreiben
@@ -61,10 +72,18 @@ public class Export {
         }
     }
 
+    /**
+     * Exportiert die gesamte Liste der Patienten in eine CSV-Datei.
+     */
+
     public static void exportGesamtePatientenliste(){
         String query = "SELECT * FROM patients";
         exportCSV(query, new String[0]);
     }
+
+    /**
+     * Ermöglicht den Export von Daten eines einzelnen Patienten, nach Auswahl aus einer Liste.
+     */
 
     public static void exportEinzelnePatienten(){
         String query = "SELECT SVNR, Vorname, Nachname FROM patients";
@@ -99,5 +118,4 @@ public class Export {
         }
 
     }
-
 }

@@ -5,6 +5,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 
+/**
+ * Die Klasse `GUIPatientenSuche` stellt eine Benutzeroberfläche zur Verfügung, um nach Patienten in der Datenbank zu suchen,
+ * die mit der Sozialversicherungsnummer (SVNR) übereinstimmen. Sie ermöglicht die Anzeige von Patientendaten in einer Tabelle
+ * und bietet Funktionen zum Bearbeiten, Löschen und Abbrechen der Suche.
+ */
+
 public class GUIPatientenSuche extends JFrame {
     private JPanel contentPane;
     private JLabel labelSuche;
@@ -19,9 +25,18 @@ public class GUIPatientenSuche extends JFrame {
     private DefaultTableModel tableModel;
     private JScrollPane scrollPane;
 
+    /**
+     * Öffnet ein Fenster zur Patientensuche basierend auf der Sozialversicherungsnummer.
+     * Es ermöglicht dem Benutzer, eine SVNR einzugeben, die mit den in der Datenbank gespeicherten Patienten übereinstimmt.
+     * Suchergebnisse werden in einer Tabelle angezeigt. Der Benutzer kann aus den Ergebnissen einen Patienten auswählen,
+     * um dessen Daten zu bearbeiten oder den Patienten zu löschen.
+     *
+     * Die Methode überprüft die Eingabe des Benutzers, führt die Suche in der Datenbank durch und aktualisiert die Anzeige
+     * der Suchergebnisse. Es gibt auch Optionen, die Auswahl abzubrechen oder zu bearbeiten.
+     */
 
     public void patientenSuchen() {
-       //Neues JFrame für die Suchfunktion
+       //Neues JFrame (Suchfenster) für die Suchfunktion
         JFrame suchFenster = new JFrame("Patient suchen");
         suchFenster.setSize(800, 600);
         suchFenster.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -29,24 +44,24 @@ public class GUIPatientenSuche extends JFrame {
         suchFenster.setLayout(new BorderLayout());
 
         JPanel suchPanel = new JPanel();
-        suchPanel.setLayout(new FlowLayout());
+        suchPanel.setLayout(new FlowLayout(FlowLayout.LEFT,20,20)); // Abstand zwischen den Komponenten
         JLabel labelSuche = new JLabel("Sozialversicherungsnummer:");
         textSuche = new JTextField(10);
         JButton buttonSuche = new JButton("Suchen");
 
-        //Hinzufügen im Suchfenster
+        //Hinzufügen der Felder im Suchfenster
         suchPanel.add(labelSuche);
         suchPanel.add(textSuche);
         suchPanel.add(buttonSuche);
 
-        // Tabelle für Suchergebnisse
+        // Erstellen und hinzufügen einer Tabelle für Suchergebnisse
         String[] spalten = {"SVNR", "Nachname", "Vorname", "Geburtsdatum", "Straße", "Hausnummer", "PLZ", "Ort", "Diagnose"};
         DefaultTableModel tableModel = new DefaultTableModel(spalten, 0);
         JTable patientenTabelle = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(patientenTabelle);
 
         //Panel für die Buttons
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20,20));
         JButton buttonAbbrechen = new JButton("Abbrechen");
         JButton buttonLöschen = new JButton("Löschen");
         JButton buttonBearbeiten = new JButton("Bearbeiten");
@@ -60,7 +75,7 @@ public class GUIPatientenSuche extends JFrame {
         suchFenster.add(scrollPane, BorderLayout.CENTER);
         suchFenster.add(buttonPanel, BorderLayout.SOUTH);
 
-        //Action Listener für Button machen
+        //Action Listener für Suchen Button
         buttonSuche.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -71,14 +86,13 @@ public class GUIPatientenSuche extends JFrame {
                     JOptionPane.showMessageDialog(suchFenster, "Bitte geben Sie eine Sozialversicherungsnummer ein!","Eingabefehler",JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-
                //Überprüfung nur Zahlen erlaubt
                if(!suchbegriff.matches("\\d+")){ //Regex für nur Zahlen
                     JOptionPane.showMessageDialog(suchFenster, "Bitte nur Zahlen eingeben!", "Eingabefehler", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
-               //Methode dbVerbidung aus der Patientenklasse aufrufen
+               //Methode zur DB-Verbindung aus der Patientenklasse aufrufen
                 Connection connection = Patient.dbVerbindung();
 
                 if( connection != null) {
@@ -88,7 +102,7 @@ public class GUIPatientenSuche extends JFrame {
                            pst.setString(1, "%" + suchbegriff + "%");
                            ResultSet rs = pst.executeQuery();
 
-                    tableModel.setRowCount(0);
+                    tableModel.setRowCount(0); //Vorherige Ergebnisse entfernen
 
                     boolean eintragGefunden = false; //Prüfen, ob Suchbegriff gefunden wurde
 
@@ -121,7 +135,6 @@ public class GUIPatientenSuche extends JFrame {
             }
         });
 
-
         //Action Listener für Abbrechen-Button
         buttonAbbrechen.addActionListener(new ActionListener() {
             @Override
@@ -142,7 +155,6 @@ public class GUIPatientenSuche extends JFrame {
             long svnr = (long)tableModel.getValueAt(selectedRow, 0);
             int confirm = JOptionPane.showConfirmDialog(suchFenster, "Möchten Sie den Patienten mit der Sozialversicherungsnummer " + svnr + " löschen?","Bestätigung",JOptionPane.YES_NO_OPTION);
 
-
                if(confirm == JOptionPane.YES_OPTION) {
                    String suchbegriff = textSuche.getText();
 
@@ -158,14 +170,13 @@ public class GUIPatientenSuche extends JFrame {
 
                            if(rowsDeleted > 0) {
                                tableModel.removeRow(selectedRow);
-                               JOptionPane.showMessageDialog(suchFenster,"Patient erfolgreich aus Datenbank gelöscht.");
+                               JOptionPane.showMessageDialog(this,"Patient erfolgreich aus Datenbank gelöscht.");
                            }
                        }catch(SQLException ex){
                            ex.printStackTrace();
-                           JOptionPane.showMessageDialog(suchFenster, "Fehler beim Löschen des Patienten! ", "Fehler", JOptionPane.ERROR_MESSAGE);
+                           JOptionPane.showMessageDialog(this, "Fehler beim Löschen des Patienten! ", "Fehler", JOptionPane.ERROR_MESSAGE);
                        }
                        }
-
                }
         });
 
@@ -177,31 +188,42 @@ public class GUIPatientenSuche extends JFrame {
             return;
             }
 
-            //Patientendaten aus Tabelle holen
-            long svnr = (long)tableModel.getValueAt(selectedRow, 0);
-            String nachname = (String)tableModel.getValueAt(selectedRow, 1);
-            String vorname = (String)tableModel.getValueAt(selectedRow, 2);
-            Date geburtsdatum = (Date)tableModel.getValueAt(selectedRow, 3);
-            String strasse = (String)tableModel.getValueAt(selectedRow, 4);
-            int hausnummer = (int)tableModel.getValueAt(selectedRow, 5);
-            int PLZ = (int)tableModel.getValueAt(selectedRow, 6);
-            String ort = (String)tableModel.getValueAt(selectedRow, 7);
-            String diagnose = (String)tableModel.getValueAt(selectedRow, 8);
+            //Patientendaten aus Tabelle holen und in ein Bearbeitungsfenster laden
+            long svnr = (long) tableModel.getValueAt(selectedRow, 0);
+            String nachname = (String) tableModel.getValueAt(selectedRow, 1);
+            String vorname = (String) tableModel.getValueAt(selectedRow, 2);
+            Date geburtsdatum = (Date) tableModel.getValueAt(selectedRow, 3);
+            String strasse = (String) tableModel.getValueAt(selectedRow, 4);
+            int hausnummer = (int) tableModel.getValueAt(selectedRow, 5);
+            int plz = (int) tableModel.getValueAt(selectedRow, 6);
+            String ort = (String) tableModel.getValueAt(selectedRow, 7);
+            String diagnose = (String) tableModel.getValueAt(selectedRow, 8);
 
-            //Neues Fenster für die Bearbeitung
             JFrame bearbeitenFenster = new JFrame("Patient bearbeiten");
-            bearbeitenFenster.setSize(400,400);
-            bearbeitenFenster.setLayout(new GridLayout(10,2));
+            bearbeitenFenster.setSize(400, 400);
+            bearbeitenFenster.setLayout(new GridLayout(0, 2, 10, 10)); // Abstände zwischen den Feldern
             bearbeitenFenster.setLocationRelativeTo(null);
 
-            //Felder für die Bearbeitung
+            // Geschlecht ComboBox
+            JComboBox<String> comboGeschlecht = new JComboBox<>(new String[] { "Männlich", "Weiblich", "Divers" });
+            comboGeschlecht.setSelectedItem(null); // Kein Wert vorab auswählgewählt
+
+            // Nationalität ComboBox
+            JComboBox<String> comboNationalitaet = new JComboBox<>(new String[] { "Österreich", "Deutschland", "Schweiz", "andere" });
+            comboNationalitaet.setSelectedItem(null);
+
+            // Versicherung ComboBox
+            JComboBox<String> comboVersicherung = new JComboBox<>(new String[] { "ÖGK", "BVAEB", "SVS", "andere"});
+            comboVersicherung.setSelectedItem(null);
+
+            // Felder für die Bearbeitung
             JTextField textnachname = new JTextField(nachname);
             JTextField textvorname = new JTextField(vorname);
             JTextField textgeburtsdatum = new JTextField(geburtsdatum.toString());
             JTextField textdiagnose = new JTextField(diagnose);
             JTextField textstrasse = new JTextField(strasse);
             JTextField texthausnummer = new JTextField(String.valueOf(hausnummer));
-            JTextField textplz = new JTextField(String.valueOf(PLZ));
+            JTextField textplz = new JTextField(String.valueOf(plz));
             JTextField textort = new JTextField(ort);
 
             // Hinzufügen der Felder zum Fenster
@@ -221,12 +243,20 @@ public class GUIPatientenSuche extends JFrame {
             bearbeitenFenster.add(textplz);
             bearbeitenFenster.add(new JLabel("Ort:"));
             bearbeitenFenster.add(textort);
+            bearbeitenFenster.add(new JLabel("Geschlecht:"));
+            bearbeitenFenster.add(comboGeschlecht);
+            bearbeitenFenster.add(new JLabel("Nationalität:"));
+            bearbeitenFenster.add(comboNationalitaet);
+            bearbeitenFenster.add(new JLabel("Versicherung:"));
+            bearbeitenFenster.add(comboVersicherung);
 
             JButton buttonSpeichern = new JButton("Bearbeitung speichern");
             JButton buttonBearbAbbrechen = new JButton("Bearbeitung abbrechen");
 
             bearbeitenFenster.add(buttonSpeichern);
             bearbeitenFenster.add(buttonBearbAbbrechen);
+
+
 
             //Bearbeitung abbrechen Button
             buttonBearbAbbrechen.addActionListener(e1 -> bearbeitenFenster.dispose());
@@ -243,24 +273,46 @@ public class GUIPatientenSuche extends JFrame {
                 //Änderungen speichern
                 String suchbegriff = textSuche.getText();
 
-                //Aufrufen der Methode dbVerbindung in der Patientenmethode
+                //Aufrufen der Methode zur DB-Verbindung in der Patientenmethode
                 Connection connection = Patient.dbVerbindung();
 
 
                 if( connection != null) {
                     try {
-                        String sql = "UPDATE patients SET Nachname = ?, Vorname = ?, Geburtsdatum = ?, Diagnose = ?, Straße = ?, Hausnummer = ?, PLZ = ?, Ort = ? WHERE SVNR = ?";
+                        // IDs für Geschlecht, Nationalität und Versicherung holen
+                        String sqlGeschlecht = "SELECT idGender FROM gender WHERE bezeichnung = ?";
+                        PreparedStatement pstGeschlecht = connection.prepareStatement(sqlGeschlecht);
+                        pstGeschlecht.setString(1, (String) comboGeschlecht.getSelectedItem());
+                        ResultSet rsGeschlecht = pstGeschlecht.executeQuery();
+                        int geschlechtId = rsGeschlecht.next() ? rsGeschlecht.getInt("idGender") : -1;
+
+                        String sqlNationalitaet = "SELECT idNationality FROM nationality WHERE bezeichnung = ?";
+                        PreparedStatement pstNationalitaet = connection.prepareStatement(sqlNationalitaet);
+                        pstNationalitaet.setString(1, (String) comboNationalitaet.getSelectedItem());
+                        ResultSet rsNationalitaet = pstNationalitaet.executeQuery();
+                        int nationalitaetId = rsNationalitaet.next() ? rsNationalitaet.getInt("idNationality") : -1;
+
+                        String sqlVersicherung = "SELECT idInsurance FROM insurance WHERE bezeichnung = ?";
+                        PreparedStatement pstVersicherung = connection.prepareStatement(sqlVersicherung);
+                        pstVersicherung.setString(1, (String) comboVersicherung.getSelectedItem());
+                        ResultSet rsVersicherung = pstVersicherung.executeQuery();
+                        int versicherungId = rsVersicherung.next() ? rsVersicherung.getInt("idInsurance") : -1;
+
+                        // UPDATE-Statement für die Bearbeitung des Patienten
+                        String sql = "UPDATE patients SET Nachname = ?, Vorname = ?, Geburtsdatum = ?, Diagnose = ?, Straße = ?, Hausnummer = ?, PLZ = ?, Ort = ?, Geschlecht_ID = ?, Nationalitaet_ID = ?, Versicherung_ID = ? WHERE SVNR = ?";
                         PreparedStatement pst = connection.prepareStatement(sql);
                         pst.setString(1, textnachname.getText());
                         pst.setString(2, textvorname.getText());
-                        pst.setDate(3, Date.valueOf(textgeburtsdatum.getText()));
+                        pst.setDate(3, geburtsdatum);
                         pst.setString(4, textdiagnose.getText());
                         pst.setString(5, textstrasse.getText());
                         pst.setInt(6, Integer.parseInt(texthausnummer.getText()));
                         pst.setInt(7, Integer.parseInt(textplz.getText()));
                         pst.setString(8, textort.getText());
-                        pst.setLong(9, svnr);
-
+                        pst.setInt(9, geschlechtId);
+                        pst.setInt(10, nationalitaetId);
+                        pst.setInt(11, versicherungId);
+                        pst.setLong(12, svnr); // Die SVNR des Patienten, der bearbeitet wird
                         int rowsUpdated = pst.executeUpdate();
 
                         if (rowsUpdated > 0) {

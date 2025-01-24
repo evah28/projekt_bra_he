@@ -19,6 +19,19 @@ public class Patient {
     private static final String USER1 = "23brabec";
     private static final String PASSWORD1 = "geb23";
 
+    /**
+     * Konstruktor für die Erstellung eines Patientenobjekts.
+     * @param SVNR Die Sozialversicherungsnummer des Patienten.
+     * @param Vorname Der Vorname des Patienten.
+     * @param Nachname Der Nachname des Patienten.
+     * @param Geburtsdatum Das Geburtsdatum des Patienten.
+     * @param Straße Die Straße, in der der Patient lebt.
+     * @param Hausnummer Die Hausnummer des Patienten.
+     * @param PLZ Die Postleitzahl des Wohnorts des Patienten.
+     * @param Ort Der Ort des Patienten.
+     * @param Diagnose Die Diagnose des Patienten.
+     */
+
     //Konstruktor
     public Patient(long SVNR, String Vorname, String Nachname, String Geburtsdatum, String Straße, String Hausnummer, String PLZ, String Ort, String Diagnose) {
         this.SVNR = SVNR;
@@ -32,6 +45,11 @@ public class Patient {
         this.Diagnose = Diagnose;
     }
 
+    /**
+     * Stellt eine Verbindung zur Datenbank her.
+     * @return Eine Connection zur Datenbank, falls die Verbindung erfolgreich ist, ansonsten null.
+     */
+
     //Methode DB Verbindung
     public static Connection dbVerbindung() {
 
@@ -41,8 +59,24 @@ public class Patient {
         } catch (SQLException e1) {
         }
         return connection;
-
     }
+
+    /**
+     * Fügt einen neuen Patienten in der Datenbank hinzu.
+     * @param SVNR Die Sozialversicherungsnummer des Patienten.
+     * @param Vorname Der Vorname des Patienten.
+     * @param Nachname Der Nachname des Patienten.
+     * @param Geburtsdatum Das Geburtsdatum des Patienten.
+     * @param Straße Die Straße des Patienten.
+     * @param Hausnummer Die Hausnummer des Patienten.
+     * @param PLZ Die Postleitzahl des Patienten.
+     * @param Ort Der Ort des Patienten.
+     * @param Diagnose Die Diagnose des Patienten.
+     * @param eingabeGender Das Geschlecht des Patienten.
+     * @param eingabeNationality Die Nationalität des Patienten.
+     * @param eingabeInsurance Die Versicherung des Patienten.
+     * @return true, wenn der Patient erfolgreich hinzugefügt wurde, andernfalls false.
+     */
 
     public static boolean patientEinfuegen(long SVNR, String Vorname, String Nachname, String Geburtsdatum, String Straße, String Hausnummer, String PLZ, String Ort, String Diagnose, String eingabeGender, String eingabeNationality, String eingabeInsurance) {
 
@@ -54,6 +88,7 @@ public class Patient {
             return false;
         }
 
+        //Parameter für das Prepared Statement setzen
             try (PreparedStatement prstmt = connection.prepareStatement(query)) {
                 prstmt.setLong(1, SVNR);
                 prstmt.setString(2, Vorname);
@@ -74,6 +109,9 @@ public class Patient {
                 return false;
             }
         }
+
+
+    // Getter- und Setter-Methoden für die Attribute des Patienten
 
     public long getSVNR() {
         return SVNR;
@@ -136,6 +174,12 @@ public class Patient {
     public void setOrt(String ort) {
         Ort = ort;
     }
+
+
+    /**
+     * Gibt eine stringbasierte Darstellung des Patienten zurück.
+     * @return String Darstellung des Patienten.
+     */
 
     @Override
     public String toString() {

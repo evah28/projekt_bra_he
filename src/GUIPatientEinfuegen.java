@@ -6,6 +6,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+/**
+ * Diese Klasse stellt die GUI zum Einfügen eines neuen Patienten in die Datenbank bereit.
+ */
+
 public class GUIPatientEinfuegen extends JFrame {
 
     private GUIMenu GUIMenu; //Referenz zur MenüGUI
@@ -26,9 +30,14 @@ public class GUIPatientEinfuegen extends JFrame {
     private JComboBox comboBoxNationality;
     private JComboBox comboBoxInsurance;
 
-
+    /**
+     * Konstruktor für die GUI zum Einfügen eines neuen Patienten.
+     *
+     * @param guiMenu Das Hauptfenster, von dem aus dieses Dialogfeld geöffnet wurde.
+     */
 
     public GUIPatientEinfuegen(GUIMenu guiMenu){
+       //Fenster Einstellungen
         this.GUIMenu = guiMenu;
         setTitle("Neuen Patient hinzufügen");
         setSize(400,550);
@@ -42,7 +51,7 @@ public class GUIPatientEinfuegen extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5,5,5,5);
 
-        //Eingabefelder hinzufügen
+        //Eingabefelder für Patientendaten hinzufügen
         //SVNR
         gbc.gridx = 0; gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
@@ -133,7 +142,7 @@ public class GUIPatientEinfuegen extends JFrame {
         textFieldDiagnose = new JTextField(20);
         contentPaneEinfuegen.add(textFieldDiagnose,gbc);
 
-       //ComboBoxen
+        //ComboBoxen
         // Geschlecht ComboBox
         gbc.gridx = 0; gbc.gridy = 9;
         gbc.anchor = GridBagConstraints.WEST;
@@ -181,6 +190,11 @@ public class GUIPatientEinfuegen extends JFrame {
         buttonAbbrechen = new JButton("Abbrechen");
         contentPaneEinfuegen.add(buttonAbbrechen,gbc);
 
+
+        /**
+         * Speichert die eingegebenen Patientendaten in der Datenbank.
+         * Die Eingaben werden validiert und dann ein SQL-Insert ausgeführt, um die Daten zu speichern.
+         */
         //Action Listener für Button Speichern
         buttonSpeichern.addActionListener(new ActionListener() {
            @Override
@@ -205,7 +219,6 @@ public class GUIPatientEinfuegen extends JFrame {
                          JOptionPane.showMessageDialog(GUIPatientEinfuegen.this, "Die SVNR ist bereits vergeben!", "Fehler", JOptionPane.ERROR_MESSAGE);
                          return;
                      }
-
                      //Alle Eingabefelder müssen ausgefüllt sein
                      if (eingabeVorname.isEmpty() || eingabeNachname.isEmpty() || eingabeGeburtsdatum.isEmpty() || eingabeStraße.isEmpty() || eingabeHausnummer.isEmpty() || eingabePlz.isEmpty() || eingabeOrt.isEmpty() || eingabeDiagnose.isEmpty() || eingabeGender == null || eingabeNationality == null || eingabeInsurance == null) {
                          JOptionPane.showMessageDialog(contentPaneEinfuegen, "Bitte alle Felder ausfüllen!", "Eingabefehler", JOptionPane.ERROR_MESSAGE);
@@ -231,6 +244,7 @@ public class GUIPatientEinfuegen extends JFrame {
            }
         });
 
+        //Zurück zum Hauptmenü
         //Action Listener Abbrechen-Button
         buttonAbbrechen.addActionListener(new ActionListener() {
             @Override
@@ -242,6 +256,16 @@ public class GUIPatientEinfuegen extends JFrame {
         });
 
 }
+
+    /**
+     * Überprüft, ob die eingegebene Sozialversicherungsnummer (SVNR) bereits in der Datenbank vorhanden ist.
+     * Diese Methode führt eine SQL-Abfrage aus, um die Anzahl der Datensätze mit der angegebenen SVNR zu zählen.
+     * Wenn die Anzahl 0 ist, ist die SVNR einzigartig und die Methode gibt true zurück.
+     * Andernfalls gibt sie false zurück.
+     *
+     * @param SVNR Die Sozialversicherungsnummer des Patienten, die überprüft werden soll.
+     * @return true, wenn die SVNR einzigartig ist (noch nicht in der Datenbank vorhanden); false, wenn die SVNR bereits existiert.
+     */
 
     public boolean SVNReinzigartig(long SVNR){
        String sql = "SELECT COUNT(*) FROM patients WHERE SVNR = ?";
@@ -259,6 +283,17 @@ public class GUIPatientEinfuegen extends JFrame {
         }
         return false;
     }
+
+    /**
+     * Validiert die Benutzereingaben für die SVNR, das Geburtsdatum und die Postleitzahl.
+     * Diese Methode prüft, ob:
+     * - Die SVNR nur aus Zahlen besteht,
+     * - Das Geburtsdatum dem Format YYYY-MM-DD entspricht,
+     * - Die Postleitzahl nur aus Zahlen besteht.
+     * Falls eine der Prüfungen fehlschlägt, wird eine entsprechende Fehlermeldung angezeigt und die Methode gibt false zurück.
+     *
+     * @return true, wenn alle Eingaben gültig sind; false, wenn eine Eingabe ungültig ist.
+     */
 
     public boolean validateInput(){
         String svnrText = textFieldSVNR.getText();
@@ -281,7 +316,6 @@ public class GUIPatientEinfuegen extends JFrame {
         }
         return true;
     }
-
 }
 
 

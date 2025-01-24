@@ -79,32 +79,42 @@ public class GUILogin extends JFrame {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-             //Vordefinierte Login-Daten
                 String validusername = "dottoreamore";
                 String validpasswort = "1234";
-
                 String enteredUsername = textFieldBenutzername.getText();
                 String enteredPassword = new String(passwordField.getPassword());
 
-                // Vergleich der Eingaben mit den gültigen Werten
-                if (validusername.equals(enteredUsername) && validpasswort.equals(enteredPassword)) {
-                    System.out.println("Login erfolgreich");
+                // SwingWorker für Login-Prozess im Hintergrund
+                SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
+                    @Override
+                    protected Boolean doInBackground() throws Exception {
+                        // Überprüfung des Logins im Hintergrund
+                        return validusername.equals(enteredUsername) && validpasswort.equals(enteredPassword);
+                    }
 
-                    // Login-Frame schließen
-                    dispose();
+                    @Override
+                    protected void done() {
+                        try {
+                            if (get()) {
+                                System.out.println("Login erfolgreich");
+                                dispose();
+                                GUIMenu Menu = new GUIMenu();
+                                Menu.setLocationRelativeTo(null);
+                                Menu.setVisible(true);
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Login fehlgeschlagen!", "Fehler", JOptionPane.ERROR_MESSAGE);
+                            }
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                };
 
-                    // Neues Menü-Frame öffnen
-                    GUIMenu Menu = new GUIMenu();
-                    Menu.setLocationRelativeTo(null); // Zentriere Fenster
-                    Menu.setVisible(true);
-
-                }
-                else {
-                    JOptionPane.showMessageDialog(null, "Login fehlgeschlagen!", "Fehler", JOptionPane.ERROR_MESSAGE);
-                }
-
+                // Starte den Worker
+                worker.execute();
             }
         });
+
 
         //Abbrechen Button schließt das Programm
         abbrechenButton.addActionListener(e -> System.exit(0));

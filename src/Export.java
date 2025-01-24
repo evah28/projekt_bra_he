@@ -17,60 +17,72 @@ public class Export {
      * @param parameter Die Parameter für die SQL-Abfrage
      */
 
-    public static void exportCSV(String query, String[] parameter){
+    public static void exportCSV(String query, String[] parameter) {
+        SwingWorker<Void, Void> worker = new SwingWorker() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                JFileChooser filechooser = new JFileChooser();
+                filechooser.setDialogTitle("Patientendaten als CSV speichern");
+                filechooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
-        JFileChooser filechooser = new JFileChooser();
-        filechooser.setDialogTitle("Patientendaten als CSV speichern");
-        filechooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                //Standardname für die CSV Datei
+                filechooser.setSelectedFile(new java.io.File("patientendaten.csv"));
 
-        //Standardname für die CSV Datei
-        filechooser.setSelectedFile(new java.io.File("patientendaten.csv"));
+                int userSelection = filechooser.showSaveDialog(null);
 
-        int userSelection = filechooser.showSaveDialog(null);
+                if (userSelection == JFileChooser.APPROVE_OPTION) {
+                    String dateipfad = filechooser.getSelectedFile().getAbsolutePath();
 
-        if(userSelection == JFileChooser.APPROVE_OPTION) {
-            String dateipfad = filechooser.getSelectedFile().getAbsolutePath();
+                    try (Connection connection = Patient.dbVerbindung();
+                         PreparedStatement stmt = connection.prepareStatement(query);
+                         OutputStreamWriter fileWriter = new OutputStreamWriter(new FileOutputStream(dateipfad), "UTF-8");
+                         FileWriter filedWriter = new FileWriter(dateipfad)) {
 
-            try (Connection connection = Patient.dbVerbindung();
-                 PreparedStatement stmt = connection.prepareStatement(query);
-                 OutputStreamWriter fileWriter = new OutputStreamWriter(new FileOutputStream(dateipfad), "UTF-8");
-                 FileWriter filedWriter = new FileWriter(dateipfad)){
+                        //Parameter der Abfrage setzen
+                        for (int i = 0; i < parameter.length; i++) {
+                            stmt.setString(i + 1, parameter[i]);
+                        }
 
-                //Parameter der Abfrage setzen
-                for(int i = 0; i < parameter.length; i++){
-                    stmt.setString(i + 1, parameter[i]);
+                        ResultSet resultSet = stmt.executeQuery();
+
+                        //Byte Order Mark für UTF-8 und CSV Header
+                        fileWriter.write("\uFEFF");
+                        fileWriter.append("SVNR; Vorname; Nachname; Geburtsdatum; Straße; Hausnummer; PLZ; Ort; Diagnose\n");
+
+                        // Patientendaten schreiben
+                        while (resultSet.next()) {
+                            fileWriter.append(resultSet.getString("SVNR")).append(";");
+                            fileWriter.append(resultSet.getString("Vorname")).append(";");
+                            fileWriter.append(resultSet.getString("Nachname")).append(";");
+                            fileWriter.append(resultSet.getString("Geburtsdatum")).append(";");
+                            fileWriter.append(resultSet.getString("Straße")).append(";");
+                            fileWriter.append(resultSet.getString("Hausnummer")).append(";");
+                            fileWriter.append(resultSet.getString("PLZ")).append(";");
+                            fileWriter.append(resultSet.getString("Ort")).append(";");
+                            fileWriter.append(resultSet.getString("Diagnose")).append("\n");
+                        }
+
+                        JOptionPane.showMessageDialog(null, "CSV-Datei erfolgreich erstellt: " + dateipfad);
+                    } catch (IOException e) {
+                        SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null, "Fehler beim Schreiben der Datei!" + e.getMessage()));
+                    } catch (Exception e) {
+                        SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null, "Fehler beim Exportieren der Datei!" + e.getMessage()));
+                        e.printStackTrace();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Export abgebrochen!");
                 }
-
-                ResultSet resultSet = stmt.executeQuery();
-
-                //Byte Order Mark für UTF-8 und CSV Header
-                fileWriter.write("\uFEFF");
-                fileWriter.append("SVNR; Vorname; Nachname; Geburtsdatum; Straße; Hausnummer; PLZ; Ort; Diagnose\n");
-
-                // Patientendaten schreiben
-                while (resultSet.next()) {
-                    fileWriter.append(resultSet.getString("SVNR")).append(";");
-                    fileWriter.append(resultSet.getString("Vorname")).append(";");
-                    fileWriter.append(resultSet.getString("Nachname")).append(";");
-                    fileWriter.append(resultSet.getString("Geburtsdatum")).append(";");
-                    fileWriter.append(resultSet.getString("Straße")).append(";");
-                    fileWriter.append(resultSet.getString("Hausnummer")).append(";");
-                    fileWriter.append(resultSet.getString("PLZ")).append(";");
-                    fileWriter.append(resultSet.getString("Ort")).append(";");
-                    fileWriter.append(resultSet.getString("Diagnose")).append("\n");
-                }
-
-                JOptionPane.showMessageDialog(null, "CSV-Datei erfolgreich erstellt: " + dateipfad);
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(null, "Fehler beim Schreiben der Datei!"+ e.getMessage());
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Fehler beim Exportieren der Datei!" + e.getMessage() );
-                e.printStackTrace();
+                return null;
             }
-        } else{
-            JOptionPane.showMessageDialog(null, "Export abgebrochen!" );
+                @Override
+                protected void done () {
+                    SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null, "Export abgeschlossen!"));
+                }
+        };
+
+            worker.execute();
         }
-    }
+
 
     /**
      * Exportiert die gesamte Liste der Patienten in eine CSV-Datei.
@@ -119,3 +131,9 @@ public class Export {
 
     }
 }
+
+/*
+SwingWorker: Die langwierige Dateioperation wird im Hintergrund (mit doInBackground()) durchgeführt, damit die UI nicht blockiert wird.
+done(): Wenn der Hintergrundprozess fertig ist, wird die Methode done() aufgerufen, um eine Bestätigung anzuzeigen.
+SwingUtilities.invokeLater: Wird verwendet, um UI-Änderungen im Event-Dispatch-Thread durchzuführen (für sicherere Thread-Interaktion mit der UI).
+ */

@@ -200,66 +200,81 @@ public class GUIPatientEinfuegen extends JFrame {
          */
         //Action Listener für Button Speichern
         buttonSpeichern.addActionListener(new ActionListener() {
-           @Override
+            @Override
             public void actionPerformed(ActionEvent e) {
-              if (validateInput()) {
-                 try {
-                    long SVNR = Long.parseLong(textFieldSVNR.getText());
-                    String eingabeVorname = textFieldVorname.getText();
-                    String eingabeNachname = textFieldNachname.getText();
-                    String eingabeGeburtsdatum = textFieldGeburtsdatum.getText();
-                    String eingabeStraße = textFieldStraße.getText();
-                    String eingabeHausnummer = textFieldHausnummer.getText();
-                    String eingabePlz = textFieldPLZ.getText();
-                    String eingabeOrt = textFieldOrt.getText();
-                    String eingabeDiagnose = textFieldDiagnose.getText();
-                    String eingabeGender = (String) comboBoxGender.getSelectedItem();
-                    String eingabeNationality = (String) comboBoxNationality.getSelectedItem();
-                    String eingabeInsurance = (String) comboBoxInsurance.getSelectedItem();
+                if (validateInput()) {
+                    new SwingWorker<Void, Void>() {
+                        @Override
+                        protected Void doInBackground() throws Exception {
+                            try {
+                                long SVNR = Long.parseLong(textFieldSVNR.getText());
+                                String eingabeVorname = textFieldVorname.getText();
+                                String eingabeNachname = textFieldNachname.getText();
+                                String eingabeGeburtsdatum = textFieldGeburtsdatum.getText();
+                                String eingabeStraße = textFieldStraße.getText();
+                                String eingabeHausnummer = textFieldHausnummer.getText();
+                                String eingabePlz = textFieldPLZ.getText();
+                                String eingabeOrt = textFieldOrt.getText();
+                                String eingabeDiagnose = textFieldDiagnose.getText();
+                                String eingabeGender = (String) comboBoxGender.getSelectedItem();
+                                String eingabeNationality = (String) comboBoxNationality.getSelectedItem();
+                                String eingabeInsurance = (String) comboBoxInsurance.getSelectedItem();
 
+                                // Überprüfen, ob die SVNR einzigartig ist
+                                if (!SVNReinzigartig(SVNR)) {
+                                    SwingUtilities.invokeLater(() ->
+                                            JOptionPane.showMessageDialog(GUIPatientEinfuegen.this, "Die SVNR ist bereits vergeben!", "Fehler", JOptionPane.ERROR_MESSAGE));
+                                    return null;
+                                }
 
+                                // Hole die IDs aus der Datenbank
+                                int idGender = getGenderid(eingabeGender);
+                                int idNationality = getNationalityId(eingabeNationality);
+                                int idInsurance = getInsuranceId(eingabeInsurance);
 
-                    //Überprüfen ob SVNR nur 1mal vergeben
-                     if (!SVNReinzigartig(SVNR)) {
-                         JOptionPane.showMessageDialog(GUIPatientEinfuegen.this, "Die SVNR ist bereits vergeben!", "Fehler", JOptionPane.ERROR_MESSAGE);
-                         return;
-                     }
+                                // Wenn eine ID nicht gefunden wurde, abbrechen
+                                if (idGender == -1 || idNationality == -1 || idInsurance == -1) {
+                                    SwingUtilities.invokeLater(() ->
+                                            JOptionPane.showMessageDialog(contentPaneEinfuegen, "Fehler bei der Auswahl der IDs!", "Fehler", JOptionPane.ERROR_MESSAGE));
+                                    return null;
+                                }
 
-                     //Hole die IDs aus der Datenbank
-                     int idGender = getGenderid(eingabeGender);
-                     int idNationality = getNationalityId(eingabeNationality);
-                     int idInsurance = getInsuranceId(eingabeInsurance);
-
-                     // Wenn eine ID nicht gefunden wurde (z.B. durch ungültige Eingabe), dann abbrechen
-                     if (idGender == -1 || idNationality == -1 || idInsurance == -1) {
-                         JOptionPane.showMessageDialog(contentPaneEinfuegen, "Fehler bei der Auswahl der IDs!", "Fehler", JOptionPane.ERROR_MESSAGE);
-                         return;
-                     }
-
-                     //Alle Eingabefelder müssen ausgefüllt sein
-                     if (eingabeVorname.isEmpty() || eingabeNachname.isEmpty() || eingabeGeburtsdatum.isEmpty() || eingabeStraße.isEmpty() || eingabeHausnummer.isEmpty() || eingabePlz.isEmpty() || eingabeOrt.isEmpty() || eingabeDiagnose.isEmpty() || eingabeGender == null || eingabeNationality == null || eingabeInsurance == null) {
-                         JOptionPane.showMessageDialog(contentPaneEinfuegen, "Bitte alle Felder ausfüllen!", "Eingabefehler", JOptionPane.ERROR_MESSAGE);
-                         return;
-                     }
-
-                     boolean erfolgreich = Patient.patientEinfuegen(
-                             SVNR, eingabeVorname, eingabeNachname, eingabeGeburtsdatum, eingabeStraße,
-                             eingabeHausnummer, eingabePlz, eingabeOrt, eingabeDiagnose,
-                             String.valueOf(idGender), String.valueOf(idNationality), String.valueOf(idInsurance));
-                     if (erfolgreich) {
-                         JOptionPane.showMessageDialog(null, "Patient erfolgreich hinzugefügt.");
-                         dispose();//Fenster schließen
-                         GUIMenu menu = new GUIMenu();
-                         menu.setVisible(true);
-                     } else {
-                         JOptionPane.showMessageDialog(null, "Fehler beim Hinzufügen des Patienten!");
-                     }
-                 } catch (NumberFormatException ex) {
-                     JOptionPane.showMessageDialog(null, "Bitte geben Sie eine gültige SVNR ein!");
-                 }
-              }
-           }
+                                // Speichere die Patientendaten
+                                boolean erfolgreich = Patient.patientEinfuegen(
+                                        SVNR, eingabeVorname, eingabeNachname, eingabeGeburtsdatum, eingabeStraße,
+                                        eingabeHausnummer, eingabePlz, eingabeOrt, eingabeDiagnose,
+                                        String.valueOf(idGender), String.valueOf(idNationality), String.valueOf(idInsurance));
+                                if (erfolgreich) {
+                                    SwingUtilities.invokeLater(() -> {
+                                        JOptionPane.showMessageDialog(null, "Patient erfolgreich hinzugefügt.");
+                                        dispose();
+                                        GUIMenu menu = new GUIMenu();
+                                        menu.setVisible(true);
+                                    });
+                                } else {
+                                    SwingUtilities.invokeLater(() ->
+                                            JOptionPane.showMessageDialog(null, "Fehler beim Hinzufügen des Patienten!"));
+                                }
+                            } catch (NumberFormatException ex) {
+                                SwingUtilities.invokeLater(() ->
+                                        JOptionPane.showMessageDialog(null, "Bitte geben Sie eine gültige SVNR ein!"));
+                            }
+                            return null;
+                        }
+                    }.execute();
+                }
+            }
         });
+
+        /*
+        SwingWorker wird verwendet, um die Datenbankoperationen im Hintergrund auszuführen.
+        Der eigentliche Code für das Speichern der Patientendaten wurde in die Methode doInBackground() verlagert. Diese wird im Hintergrund ausgeführt.
+        Um die GUI nicht zu blockieren, werden alle UI-Änderungen (z. B. das Anzeigen von Fehlern oder Bestätigungen) mit SwingUtilities.invokeLater() ausgeführt,
+        um sicherzustellen, dass sie im Event-Dispatch-Thread (EDT) erfolgen.
+
+        SwingWorker stellt sicher, dass die Benutzeroberfläche immer reaktionsfähig bleibt, auch wenn der Code im Hintergrund läuft.
+        Das verhindert das Einfrieren der GUI und sorgt für ein besseres Benutzererlebnis.
+         */
 
         //Zurück zum Hauptmenü
         //Action Listener Abbrechen-Button

@@ -35,6 +35,8 @@ public class GUIPatientenSuche extends JFrame {
      *
      * Die Methode überprüft die Eingabe des Benutzers, führt die Suche in der Datenbank durch und aktualisiert die Anzeige
      * der Suchergebnisse. Es gibt auch Optionen, die Auswahl abzubrechen oder zu bearbeiten.
+
+     * @throws SQLException Wenn ein Fehler bei der Verbindung zur Datenbank oder bei SQL-Abfragen auftritt
      */
 
     public void patientenSuchen() {
@@ -79,73 +81,75 @@ public class GUIPatientenSuche extends JFrame {
 
         //Action Listener für Suchen Button
             buttonSuche.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String suchbegriff = textSuche.getText();
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String suchbegriff = textSuche.getText();
 
-                //Eingabe darf nicht leer sein
-                if(suchbegriff.isEmpty()) {
-                    JOptionPane.showMessageDialog(suchFenster, "Bitte geben Sie eine Sozialversicherungsnummer ein!","Eingabefehler",JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-               //Überprüfung nur Zahlen erlaubt
-               if(!suchbegriff.matches("\\d+")){ //Regex für nur Zahlen
-                    JOptionPane.showMessageDialog(suchFenster, "Bitte nur Zahlen eingeben!", "Eingabefehler", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-               //Methode zur DB-Verbindung aus der Patientenklasse aufrufen
-                Connection connection = Patient.dbVerbindung();
-
-                if( connection != null) {
-                       try {
-                           String sql = "SELECT * FROM patients WHERE SVNR LIKE ?";
-                           PreparedStatement pst = connection.prepareStatement(sql);
-                           pst.setString(1, "%" + suchbegriff + "%");
-                           ResultSet rs = pst.executeQuery();
-
-                    tableModel.setRowCount(0); //Vorherige Ergebnisse entfernen
-
-                    boolean eintragGefunden = false; //Prüfen, ob Suchbegriff gefunden wurde
-
-                    while (rs.next()) {
-                        eintragGefunden = true; //Eintrag wurde gefunden
-                        Object[] row = {
-                            rs.getLong("SVNR"),
-                            rs.getString("Nachname"),
-                            rs.getString("Vorname"),
-                            rs.getDate("Geburtsdatum"),
-                            rs.getString("Straße"),
-                            Integer.parseInt(rs.getString("Hausnummer")),
-                            rs.getInt("PLZ"),
-                            rs.getString("Ort"),
-                            rs.getString("Diagnose"),
-                        };
-                        tableModel.addRow(row);
+                    //Eingabe darf nicht leer sein
+                    if (suchbegriff.isEmpty()) {
+                        JOptionPane.showMessageDialog(suchFenster, "Bitte geben Sie eine Sozialversicherungsnummer ein!", "Eingabefehler", JOptionPane.ERROR_MESSAGE);
+                        return;
                     }
-                    //Falls kein Eintrag gefunden
-                    if(!eintragGefunden) {
-                        JOptionPane.showMessageDialog(suchFenster, "Kein Patient mit der Sozialversicherungsnummer "+ suchbegriff+ " gefunden!", "Hinweis", JOptionPane.WARNING_MESSAGE);
+                    //Überprüfung nur Zahlen erlaubt
+                    if (!suchbegriff.matches("\\d+")) { //Regex für nur Zahlen
+                        JOptionPane.showMessageDialog(suchFenster, "Bitte nur Zahlen eingeben!", "Eingabefehler", JOptionPane.ERROR_MESSAGE);
+                        return;
                     }
-                    patientenTabelle.repaint();
-                } catch(SQLException ex){
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(suchFenster, "Fehler bei der Datenbankverbindung!");
 
-                       }
-            }
-            }
-        });
+                    //Methode zur DB-Verbindung aus der Patientenklasse aufrufen
+                    Connection connection = Patient.dbVerbindung();
+                    new Thread(() -> {
+                        try {
+                            if (connection != null) {
+                                String sql = "SELECT * FROM patients WHERE SVNR LIKE ?";
+                                PreparedStatement pst = connection.prepareStatement(sql);
+                                pst.setString(1, "%" + suchbegriff + "%");
+                                ResultSet rs = pst.executeQuery();
+
+                                SwingUtilities.invokeLater(() -> {
+                                    tableModel.setRowCount(0);
+                                    boolean eintragGefunden = false;
+
+                                    try {
+                                        while (rs.next()) {
+                                            eintragGefunden = true;
+                                            Object[] row = {
+                                                    rs.getLong("SVNR"),
+                                                    rs.getString("Nachname"),
+                                                    rs.getString("Vorname"),
+                                                    rs.getDate("Geburtsdatum"),
+                                                    rs.getString("Straße"),
+                                                    rs.getInt("Hausnummer"),
+                                                    rs.getInt("PLZ"),
+                                                    rs.getString("Ort"),
+                                                    rs.getString("Diagnose")
+                                            };
+                                            tableModel.addRow(row);
+                                        }
+
+                                        if (!eintragGefunden) {
+                                            JOptionPane.showMessageDialog(suchFenster, "Kein Patient gefunden!", "Hinweis", JOptionPane.WARNING_MESSAGE);
+                                        }
+                                    } catch (SQLException ex) {
+                                        ex.printStackTrace();
+                                    }
+                                });
+                            }
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                            SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(suchFenster, "Fehler bei der Datenbankverbindung!"));
+                        }
+                    }).start();
+
+                }
+            });
 
         //Action Listener für Abbrechen-Button
-        buttonAbbrechen.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                GUIMenu menu = new GUIMenu();
-                menu.setVisible(true);
-                suchFenster.dispose();
-            }
-        });
+       buttonAbbrechen.addActionListener(e -> {
+                    GUIMenu menu = new GUIMenu();
+                    menu.setVisible(true);
+                    suchFenster.dispose();
+                });
 
         //Action Listener für Löschen Button
         buttonLöschen.addActionListener(e -> {
@@ -161,24 +165,27 @@ public class GUIPatientenSuche extends JFrame {
                    String suchbegriff = textSuche.getText();
 
                    //Aufrufen der dbVerbindung Methode aus der Patientenklasse
-                   Connection connection = Patient.dbVerbindung();
-
-                   if( connection != null) {
+                   new Thread(() -> {
                        try {
-                           String sql = "DELETE FROM patients WHERE SVNR = ?";
-                           PreparedStatement pst = connection.prepareStatement(sql);
-                           pst.setLong(1, svnr);
-                           int rowsDeleted = pst.executeUpdate();
+                           Connection connection = Patient.dbVerbindung();
+                           if (connection != null) {
+                               String sql = "DELETE FROM patients WHERE SVNR = ?";
+                               PreparedStatement pst = connection.prepareStatement(sql);
+                               pst.setLong(1, svnr);
+                               int rowsDeleted = pst.executeUpdate();
 
-                           if(rowsDeleted > 0) {
-                               tableModel.removeRow(selectedRow);
-                               JOptionPane.showMessageDialog(this,"Patient erfolgreich aus Datenbank gelöscht.");
+                               SwingUtilities.invokeLater(() -> {
+                                   if (rowsDeleted > 0) {
+                                       tableModel.removeRow(selectedRow);
+                                       JOptionPane.showMessageDialog(suchFenster, "Patient erfolgreich gelöscht.");
+                                   }
+                               });
                            }
-                       }catch(SQLException ex){
+                       } catch (SQLException ex) {
                            ex.printStackTrace();
-                           JOptionPane.showMessageDialog(this, "Fehler beim Löschen des Patienten! ", "Fehler", JOptionPane.ERROR_MESSAGE);
+                           SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(suchFenster, "Fehler beim Löschen des Patienten!"));
                        }
-                       }
+                   }).start();
                }
         });
 
@@ -338,48 +345,59 @@ public class GUIPatientenSuche extends JFrame {
                         ResultSet rsVersicherung = pstVersicherung.executeQuery();
                         int idInsurance = rsVersicherung.next() ? rsVersicherung.getInt("idInsurance") : -1; //? = Platzhalter
 
-                        // UPDATE-Statement für die Bearbeitung des Patienten
-                        String sql = "UPDATE patients SET Nachname = ?, Vorname = ?, Geburtsdatum = ?, Diagnose = ?, Straße = ?, Hausnummer = ?, PLZ = ?, Ort = ?, idGender = ?, idNationality = ?, idInsurance = ? WHERE SVNR = ?";
-                        PreparedStatement pst = connection.prepareStatement(sql);
-                        pst.setString(1, textnachname.getText());
-                        pst.setString(2, textvorname.getText());
-                        pst.setDate(3, geburtsdatum);
-                        pst.setString(4, textdiagnose.getText());
-                        pst.setString(5, textstrasse.getText());
-                        pst.setInt(6, Integer.parseInt(texthausnummer.getText()));
-                        pst.setInt(7, Integer.parseInt(textplz.getText()));
-                        pst.setString(8, textort.getText());
-                        pst.setInt(9, idGender);
-                        pst.setInt(10, idNationality);
-                        pst.setInt(11, idInsurance);
-                        pst.setLong(12, svnr); // Die SVNR des Patienten, der bearbeitet wird
-                        int rowsUpdated = pst.executeUpdate();
 
-                        if (rowsUpdated > 0) {
-                            // Tabelle aktualisieren
-                            tableModel.setValueAt(textnachname.getText(), selectedRow, 1);
-                            tableModel.setValueAt(textvorname.getText(), selectedRow, 2);
-                            tableModel.setValueAt(java.sql.Date.valueOf(textgeburtsdatum.getText()), selectedRow, 3);                            tableModel.setValueAt(textdiagnose.getText(), selectedRow, 4);
-                            tableModel.setValueAt(textstrasse.getText(), selectedRow, 5);
-                            tableModel.setValueAt(Integer.parseInt(texthausnummer.getText()), selectedRow, 6);
-                            tableModel.setValueAt(Integer.parseInt(textplz.getText()), selectedRow, 7);
-                            tableModel.setValueAt(textort.getText(), selectedRow, 8);
+                        new Thread(() -> {
+                            try {
+                                if (connection != null) {
+                                    // UPDATE-Statement für die Bearbeitung des Patienten
+                                    String sql = "UPDATE patients SET Nachname = ?, Vorname = ?, Geburtsdatum = ?, Diagnose = ?, Straße = ?, Hausnummer = ?, PLZ = ?, Ort = ?, idGender = ?, idNationality = ?, idInsurance = ? WHERE SVNR = ?";
+                                    PreparedStatement pst = connection.prepareStatement(sql);
+                                    pst.setString(1, textnachname.getText());
+                                    pst.setString(2, textvorname.getText());
+                                    pst.setDate(3, geburtsdatum);
+                                    pst.setString(4, textdiagnose.getText());
+                                    pst.setString(5, textstrasse.getText());
+                                    pst.setInt(6, Integer.parseInt(texthausnummer.getText()));
+                                    pst.setInt(7, Integer.parseInt(textplz.getText()));
+                                    pst.setString(8, textort.getText());
+                                    pst.setInt(9, idGender);
+                                    pst.setInt(10, idNationality);
+                                    pst.setInt(11, idInsurance);
+                                    pst.setLong(12, svnr); // Die SVNR des Patienten, der bearbeitet wird
+                                    int rowsUpdated = pst.executeUpdate();
 
-                            JOptionPane.showMessageDialog(bearbeitenFenster, "Patient erfolgreich bearbeitet.");
-                            bearbeitenFenster.dispose();
-                        }
-                    }catch(SQLException ex2) {
-                    ex2.printStackTrace();
-                    JOptionPane.showMessageDialog(bearbeitenFenster, "Fehler beim Bearbeiten des Patienten.","Fehler", JOptionPane.ERROR_MESSAGE);
-                    } catch(IllegalArgumentException ex3) {
-                        JOptionPane.showMessageDialog(bearbeitenFenster, "Bitte geben Sie ein gültiges Datum im Format yyyy-mm-dd ein.", "Eingabefehler",JOptionPane.ERROR_MESSAGE);
+
+
+                                    SwingUtilities.invokeLater(() -> {
+                                        if (rowsUpdated > 0) {
+                                            tableModel.setValueAt(textnachname.getText(), selectedRow, 1);
+                                            tableModel.setValueAt(textvorname.getText(), selectedRow, 2);
+                                            tableModel.setValueAt(java.sql.Date.valueOf(textgeburtsdatum.getText()), selectedRow, 3);
+                                            tableModel.setValueAt(textdiagnose.getText(), selectedRow, 4);
+                                            tableModel.setValueAt(textstrasse.getText(), selectedRow, 5);
+                                            tableModel.setValueAt(Integer.parseInt(texthausnummer.getText()), selectedRow, 6);
+                                            tableModel.setValueAt(Integer.parseInt(textplz.getText()), selectedRow, 7);
+                                            tableModel.setValueAt(textort.getText(), selectedRow, 8);
+
+                                            JOptionPane.showMessageDialog(bearbeitenFenster, "Patient erfolgreich bearbeitet.");
+                                            bearbeitenFenster.dispose();
+                                        }
+                                    });
+                                }
+                            } catch (SQLException ex) {
+                                ex.printStackTrace();
+                                SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(bearbeitenFenster, "Fehler beim Bearbeiten des Patienten!"));
+                            }
+                        }).start();
+                    }catch(Exception exception){
+                        exception.printStackTrace();
                     }
-                }
-                    });
-                    bearbeitenFenster.setVisible(true);
-        });
 
-        //Suchfenster sichtbar machen
+                    bearbeitenFenster.setVisible(true);
+                }
+            });
+        });
         suchFenster.setVisible(true);
     }
 }
+

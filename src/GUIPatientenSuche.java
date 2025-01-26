@@ -264,6 +264,8 @@ public class GUIPatientenSuche extends JFrame {
             panelBearbeiten.add(new JLabel("Versicherung:"));
             panelBearbeiten.add(comboVersicherung);
 
+            bearbeitenFenster.add(panelBearbeiten);
+            bearbeitenFenster.setVisible(true);
 
             //Button Panel für die Buttons
             JPanel bearbButtonPanel = new JPanel();

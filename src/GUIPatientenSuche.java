@@ -197,6 +197,7 @@ public class GUIPatientenSuche extends JFrame {
             return;
             }
 
+
             //Patientendaten aus Tabelle holen und in ein Bearbeitungsfenster laden
             long svnr = (long) tableModel.getValueAt(selectedRow, 0);
             String nachname = (String) tableModel.getValueAt(selectedRow, 1);
@@ -204,8 +205,9 @@ public class GUIPatientenSuche extends JFrame {
             Object geburtsdatumObj = tableModel.getValueAt(selectedRow, 3);
             Date geburtsdatum = geburtsdatumObj instanceof java.sql.Date
                     ? (java.sql.Date) geburtsdatumObj
-                    : java.sql.Date.valueOf(geburtsdatumObj.toString());            String strasse = (String) tableModel.getValueAt(selectedRow, 4);
-            int hausnummer = (int) tableModel.getValueAt(selectedRow, 5);
+                    : java.sql.Date.valueOf(geburtsdatumObj.toString());
+            String straße = (String) tableModel.getValueAt(selectedRow, 4);
+            int hausnummer = Integer.parseInt(tableModel.getValueAt(selectedRow, 5).toString());
             int plz = (int) tableModel.getValueAt(selectedRow, 6);
             String ort = (String) tableModel.getValueAt(selectedRow, 7);
             String diagnose = (String) tableModel.getValueAt(selectedRow, 8);
@@ -235,7 +237,7 @@ public class GUIPatientenSuche extends JFrame {
             JTextField textvorname = new JTextField(vorname);
             JTextField textgeburtsdatum = new JTextField(geburtsdatum.toString());
             JTextField textdiagnose = new JTextField(diagnose);
-            JTextField textstrasse = new JTextField(strasse);
+            JTextField textstrasse = new JTextField(straße);
             JTextField texthausnummer = new JTextField(String.valueOf(hausnummer));
             JTextField textplz = new JTextField(String.valueOf(plz));
             JTextField textort = new JTextField(ort);
@@ -348,7 +350,7 @@ public class GUIPatientenSuche extends JFrame {
                         int idInsurance = rsVersicherung.next() ? rsVersicherung.getInt("idInsurance") : -1; //? = Platzhalter
 
 
-                        new Thread(() -> {
+                      new Thread(() -> {
                             try {
                                 if (connection != null) {
                                     // UPDATE-Statement für die Bearbeitung des Patienten
@@ -375,11 +377,11 @@ public class GUIPatientenSuche extends JFrame {
                                             tableModel.setValueAt(textnachname.getText(), selectedRow, 1);
                                             tableModel.setValueAt(textvorname.getText(), selectedRow, 2);
                                             tableModel.setValueAt(java.sql.Date.valueOf(textgeburtsdatum.getText()), selectedRow, 3);
-                                            tableModel.setValueAt(textdiagnose.getText(), selectedRow, 4);
-                                            tableModel.setValueAt(textstrasse.getText(), selectedRow, 5);
-                                            tableModel.setValueAt(Integer.parseInt(texthausnummer.getText()), selectedRow, 6);
-                                            tableModel.setValueAt(Integer.parseInt(textplz.getText()), selectedRow, 7);
-                                            tableModel.setValueAt(textort.getText(), selectedRow, 8);
+                                            tableModel.setValueAt(textdiagnose.getText(), selectedRow, 8);
+                                            tableModel.setValueAt(textstrasse.getText(), selectedRow, 4);
+                                            tableModel.setValueAt(Integer.parseInt(texthausnummer.getText()), selectedRow, 5);
+                                            tableModel.setValueAt(Integer.parseInt(textplz.getText()), selectedRow, 6);
+                                            tableModel.setValueAt(textort.getText(), selectedRow, 7);
 
                                             JOptionPane.showMessageDialog(bearbeitenFenster, "Patient erfolgreich bearbeitet.");
                                             bearbeitenFenster.dispose();
@@ -390,7 +392,7 @@ public class GUIPatientenSuche extends JFrame {
                                 ex.printStackTrace();
                                 SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(bearbeitenFenster, "Fehler beim Bearbeiten des Patienten!"));
                             }
-                        }).start();
+                      }).start();
                     }catch(Exception exception){
                         exception.printStackTrace();
                     }

@@ -348,6 +348,12 @@ public class GUIPatientEinfuegen extends JFrame {
         }
         return true;
     }
+
+    /**
+     * Methode um GenderId aus der MySQL Datenbank zu holen und auch zu aktualisieren.
+     * @param gender
+     * @return
+     */
      public int getGenderid (String gender){
         String sql = "SELECT idGender FROM gender where genderPatients = ?";
         try (Connection connection = Patient.dbVerbindung();
@@ -364,6 +370,11 @@ public class GUIPatientEinfuegen extends JFrame {
         return -1; //Falls keine ID gefunden wird
      }
 
+    /**
+     * Methode um NationalityID aus der MySQL Datenbank zu holen und auch zu aktualisieren.
+     * @param nationality
+     * @return
+     */
     // Methode um die ID für Nationalität zu holen
     public int getNationalityId(String nationality) {
         String sql = "SELECT idNationality FROM nationality WHERE nationalityPatients = ?";
@@ -381,6 +392,11 @@ public class GUIPatientEinfuegen extends JFrame {
         return -1;  // Falls keine ID gefunden wird
     }
 
+    /**
+     * Methode um InsuranceID aus der MySQL Datenbank zu holen und auch zu aktualisieren.
+     * @param insurance
+     * @return
+     */
      public int getInsuranceId (String insurance){
         String sql = "SELECT idInsurance FROM insurance where insurancePatients = ?";
         try(Connection connection = Patient.dbVerbindung();
@@ -398,8 +414,13 @@ public class GUIPatientEinfuegen extends JFrame {
      }
 
 
+    /**
+     * Methode ruft Daten aus einer Datenbank ab und füllt das Modell der ComboBox mit den entsprechenden Werten
+     * @param sql
+     * @param columnName
+     * @return
+     */
 
-     //ruft Daten aus einer Datenbank ab und füllt das Modell der ComboBox mit den entsprechenden Werten.
     public DefaultComboBoxModel<String> getComboBoxModel(String sql, String columnName) {
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
         try (Connection connection = Patient.dbVerbindung();

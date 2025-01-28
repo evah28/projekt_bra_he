@@ -158,7 +158,6 @@ public class Patient {
     public String getHausnummer() {
         return Hausnummer;
     }
-
     public void setHausnummer(String hausnummer) {
         Hausnummer = hausnummer;
     }
@@ -166,7 +165,6 @@ public class Patient {
     public String getPLZ() {
         return PLZ;
     }
-
     public void setPLZ(String PLZ) {
         this.PLZ = PLZ;
     }
@@ -174,7 +172,6 @@ public class Patient {
     public String getOrt() {
         return Ort;
     }
-
     public void setOrt(String ort) {
         Ort = ort;
     }
